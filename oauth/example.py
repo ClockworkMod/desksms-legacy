@@ -101,7 +101,7 @@ req.sign_request(signature_method, consumer, token)
 
 
 
-# ok, now we finally hae all the oauth parameters that we need. Make the request.
+# ok, now we finally have all the oauth parameters that we need. Make the request.
 
 # The request needs to have an Authorization header with the OAuth parameters, so set that up.
 auth = 'OAuth realm="https://desksms.appspot.com/api/v1/user/%s/sms"' % (email)
