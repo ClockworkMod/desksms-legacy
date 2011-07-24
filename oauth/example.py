@@ -9,6 +9,9 @@ import urlparse
 # most of this example is just oauth setup.
 
 # change this for your actual domain... anonymous is bad practice
+# to get your own consumer key and secret from google, you need
+# to visit this site and prove you own your domain:
+# https://www.google.com/accounts/ManageDomains
 consumer_key = 'anonymous'
 consumer_secret = 'anonymous'
 
