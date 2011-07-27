@@ -25,7 +25,7 @@ var contacts = new function() {
     var numbersOnly = this.numbersOnly(number);
     var ret = null;
     $.each(this.list, function(index, entry) {
-      if (entry.numbersOnly.indexOf(numbersOnly) != -1)
+      if (entry.numbersOnly.indexOf(numbersOnly) != -1 || numbersOnly.indexOf(entry.numbersOnly) != -1)
         ret = entry;
     });
     

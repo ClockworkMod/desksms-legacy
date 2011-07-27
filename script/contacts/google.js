@@ -44,7 +44,7 @@ var googleContacts = new function() {
             var entry = { name: name, number: number, type: type };
             if (photoLink) {
               entry.photo = photoLink;
-              console.log(photoLink);
+              //console.log(photoLink);
             }
             contacts.addContact(entry);
           });
