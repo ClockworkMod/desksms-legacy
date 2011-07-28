@@ -1,11 +1,20 @@
 body {
     margin: 0px;
     padding: 0px;
+    font-family: 'Droid Sans', sans-serif;
+    /*
     font-family: 'Carme', sans-serif;
+    */
+    font-size: 14px;
 }
 
 a {
-text-decoration: none;
+    text-decoration: none;
+    color: #0033BB;
+}
+
+a:visited {
+    
 }
 
 #div.scroll {
@@ -28,6 +37,7 @@ text-decoration: none;
 
 .desksms-header {
     font-weight: bold;
+    color: #E27318;
 }
 
 .search-header {
@@ -43,8 +53,8 @@ text-decoration: none;
 
 .content-container {
     width: 50%;
-    min-width: 600px;
-    min-height: 400px;
+    min-width: 300px;
+    min-height: 200px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -54,30 +64,87 @@ input.rounded {
     -moz-border-radius: 5px;
     border-radius: 5px; 
     height: 25px;
-    width: 20%;
-    font-size: 22px;
     padding: 4px;
 }
 
-.contact-header-cell {
+.contact-header {
     float: left;
     display: inline;
+    width: 20%;
+    margin-top: 20px;
 }
 
-
-#contact-message-template {
-    clear: both;
+.contact-name {
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .contact-messages {
+    font-family: 'Carme', sans-serif;
     float: left;
     display: inline;
+    width: 80%;
+}
+
+.contact-messages-internal {
+    padding: 8px;
 }
 
 .message-from {
-    float: left;
+    font-weight: bold;
 }
 
 .message-content {
-    float: left;
+}
+
+.message-date {
+    color: #888888;
+    font-size: 12px;
+}
+
+.message-panel-footer {
+    background-color: #EEEEEE;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 12px;
+}
+
+.message-panel-footer li
+{
+    display: inline;
+    list-style-type: none;
+}
+
+.message-panel-footer a {
+    text-decoration: underline;
+}
+
+.contact-call {
+    padding-right: 14px;
+}
+
+.contact-text {
+}
+
+.contact-text-container {
+    display: inline;
+    margin-bottom: 8px;
+}
+
+.contact-text-container-hidden {
+    display: none;
+}
+
+.contact-text-content {
+    width: 95%;
+}
+
+.contact-message {
+    padding-bottom: 5px;
+}
+
+.hidden {
+    display: none;
 }

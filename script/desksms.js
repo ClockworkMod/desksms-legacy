@@ -11,6 +11,8 @@ var desksms = new function() {
   this.WHOAMI_URL = this.API_URL + "/user/whoami";
   this.AUTHSUB_URL = this.API_URL + "/authsub";
   
+  this.conversations = {};
+  
   this.getLoginUrl = function() {
     return sprintf(this.LOGIN_URL, window.location.href);
   }
@@ -31,7 +33,23 @@ var desksms = new function() {
     }
   */
   this.getSms = function(options, cb) {
-    jsonp(this.SMS_URL, cb, options);
+    jsonp(this.SMS_URL, function(err, data) {
+      if (data) {
+        // bucket these into conversations
+        $.each(data.data, function(index, message) {
+          var contact = contacts.findContact(message.number, desksms.conversations);
+          if (contact == null) {
+            var n = contacts.numbersOnly(message.number);
+            contact = desksms.conversations[n] = {messages: [], numbersOnly: n, latestMessageDate: message.date, number: message.number};
+          }
+          
+          contact.latestMessageDate = Math.max(contact.latestMessageDate, message.date);
+          contact.messages.push(message);
+        });
+      }
+      
+      cb(err, data);
+    }, options);
   }
   
   this.getOutbox = function(options, cb) {

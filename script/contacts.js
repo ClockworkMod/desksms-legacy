@@ -21,10 +21,14 @@ var contacts = new function() {
     contact.numbersOnly = this.numbersOnly(contact.number);
   }
   
-  this.findContact = function(number) {
+  this.findContact = function(number, list) {
+    if (list == null)
+      list = this.list;
     var numbersOnly = this.numbersOnly(number);
     var ret = null;
-    $.each(this.list, function(index, entry) {
+    $.each(list, function(index, entry) {
+      if (entry.numbersOnly == null)
+        return;
       if (entry.numbersOnly.indexOf(numbersOnly) != -1 || numbersOnly.indexOf(entry.numbersOnly) != -1)
         ret = entry;
     });

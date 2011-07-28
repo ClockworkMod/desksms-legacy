@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
   <script src="script/sprintf.js"></script>
@@ -13,11 +14,13 @@
   <link rel="stylesheet" href="style/style.css"></link>
   <link rel="stylesheet" href="style/bubble.css"></link>
   <link href='http://fonts.googleapis.com/css?family=Carme' rel='stylesheet' type='text/css'></link>
+  <link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'></link>
 </head>
 <body>
   <div class="page-header">
     <span class="desksms-header">DeskSMS</span>
     <span class="email-header"><a href="#" id="desksms-login">Login</a></span>
+    <span class="connect-google-header"><a href="javascript:googleContacts.performAuthorizationRequest()" id="connect-google">Connect to Google Contacts</a></span>
   </div>
   <!--
   <div class="search-header" align="center">
@@ -27,41 +30,40 @@
   <div class="triangle-isosceles"><div>This only needs one HTML element.</div><img src="images/go_sms.jpg"/><div>foo</div><span>bar</span><span>bar</span></div>
   -->
   
-  <div class="content-container">
-    <div id="conversation-template">
-      <div class="contact-header-cell">
-        <img src='images/contact.png' />
-        <div id="contact-name">Joe Blow</div>
-        <div id="contact-number">(206)555-1234</div>
-        <div id="contact-last-contact">2 days ago</div>
+  <div class="content-container" id="content-container">
+    
+    
+    
+    <div id="conversation-template" class="conversation-template hidden">
+      <div class="contact-header">
+        <img class="contact-image" src='images/contact.png'></img>
+        <div class="contact-name">Joe Blow</div>
+        <div class="contact-number">(206)555-1234</div>
+        <div class="contact-last-contact">2 days ago</div>
       </div>
       <div class="contact-messages">
-        <div id="contact-message-template">
-          <div class="message-from">Me:</div>
-          <div class="message-content">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</div>
-        </div>
-        <div id="contact-message-template">
-          <div class="message-from">Me:</div>
-          <div class="message-content">It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
-        </div>
-        <div id="contact-message-template">
-          <div class="message-from">Me:</div>
-          <div class="message-content">Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.</div>
-        </div>
-        <div id="contact-message-template">
-          <div class="message-from">Me:</div>
-          <div class="message-content">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</div>
+        <div class='triangle-border left'>
+          <div class="contact-messages-internal" id="contact-messages-internal">
+            <div class="contact-message-template hidden" id="contact-message-template">
+              <span class="message-from">Me</span><span>: </span><span class="message-content">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span><span class="message-date"> 4:45PM</span>
+            </div>
+          </div>
+          <div class="message-panel-footer">
+            <div class="contact-text-container contact-text-container-hidden">
+              <input class="rounded contact-text-content"></input>
+            </div>
+            <div>
+              <span><a class="contact-call" href="javascript:void()">Call</a></span>
+              <span><a class="contact-text" href="javascript:void()">Text</a></span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+    
+    
+    
   </div>
-  <p></p>
-  <div></div>
-
-  <div class="send-message-container" align="center">
-    <input class="rounded"></input>
-  </div>
-  
 </body>
 
 </html>
