@@ -1,5 +1,5 @@
 var desksms = new function() {
-  this.BASE_URL = "https://2.desksms.appspot.com";
+  this.BASE_URL = "https://desksms.appspot.com";
   this.API_URL = this.BASE_URL + "/api/v1";
   this.USER_URL = this.API_URL + "/user/default";
   this.SETTINGS_URL = this.USER_URL + "/settings";
@@ -7,14 +7,16 @@ var desksms = new function() {
   this.CALL_URL = this.USER_URL + "/call";
   this.OUTBOX_URL = this.USER_URL + "/outbox";
   this.LOGIN_URL = this.API_URL + "/user/login?continue=%s";
+  this.LOGOUT_URL = this.API_URL + "/user/logout?continue=%s";
   this.WHOAMI_URL = this.API_URL + "/user/whoami";
   this.AUTHSUB_URL = this.API_URL + "/authsub";
   
   this.getLoginUrl = function() {
-    console.log(window.location);
-    console.log(this.LOGIN_URL);
-    
     return sprintf(this.LOGIN_URL, window.location.href);
+  }
+  
+  this.getLogoutUrl = function() {
+    return sprintf(this.LOGOUT_URL, window.location.href);
   }
   
   this.whoami = function(cb) {
@@ -43,4 +45,5 @@ var desksms = new function() {
     var args = { operation: "POST", data: stringData };
     jsonp(this.OUTBOX_URL, cb, args);
   }
+  
 };

@@ -1,3 +1,83 @@
+body {
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Carme', sans-serif;
+}
+
+a {
+text-decoration: none;
+}
+
 #div.scroll {
     
+}
+
+.page-header {
+    padding: 10px;
+    background-color: #222222;
+    color: #EEEEEE;
+}
+
+.page-header a {
+    color: #EEEEEE;
+}
+
+.page-header span {
+    padding-right: 15px;
+}
+
+.desksms-header {
+    font-weight: bold;
+}
+
+.search-header {
+    padding: 9px;
+    background-color: #F1F1F1;
+}
+
+.send-message-container {
+    padding: 9px;
+    margin: 40px;
+    background-color: #F1F1F1;
+}
+
+.content-container {
+    width: 50%;
+    min-width: 600px;
+    min-height: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+input.rounded {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px; 
+    height: 25px;
+    width: 20%;
+    font-size: 22px;
+    padding: 4px;
+}
+
+.contact-header-cell {
+    float: left;
+    display: inline;
+}
+
+
+#contact-message-template {
+    clear: both;
+}
+
+.contact-messages {
+    float: left;
+    display: inline;
+}
+
+.message-from {
+    float: left;
+}
+
+.message-content {
+    float: left;
 }
