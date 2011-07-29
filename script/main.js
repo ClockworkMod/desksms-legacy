@@ -65,33 +65,43 @@ var page = new function() {
         var contents = input.val();
         if (contents == "")
           return;
-        console.log(contents);
         var number = $(message).find('.contact-number').text();
         desksms.sendSms(number, contents, function(err, data) {
-          console.log(err);
-          console.log(data);
+          if (err) {
+            console.log(err);
+            return;
+          }
+          var date = data.data[0];
+          var conversation = desksms.findConversation(number);
+          var pendingMessage = {};
+          pendingMessage.message = contents;
+          pendingMessage.type = 'outgoing';
+          pendingMessage.date = date;
+          pendingMessage.pending = true;
+          conversation.addMessage(pendingMessage);
+          page.addMessageToConversation(pendingMessage);
         });
+        
         input.blur();
       });
     });
   }
   
-  this.addMessageToConversation = function(message, displayName, messageContainer, messageTemplate, messageElement) {
+  this.addMessageToConversation = function(message, afterMessage, displayName, messageContainer, messageTemplate, messageElement) {
     var conversation = message.conversation;
     if (messageElement == null) {
       messageElement = $('#message-' + message.id);
     }
     
+    var needsInsert = false;
     if (messageElement == null || messageElement.length == 0) {
+      needsInsert = true;
       if (messageTemplate == null)
         messageTemplate = $('#contact-message-template');
 
         messageElement = messageTemplate.clone();
         messageElement.attr('id', 'message-' + message.id);
         messageElement.removeClass("hidden");
-        if (messageContainer == null)
-          messageContainer = $('#conversation-' + conversation.id).find('#contact-messages-internal');
-        messageContainer.append(messageElement);
     }
     
     var date = new Date(message.date);
@@ -104,30 +114,59 @@ var page = new function() {
     else {
       from.text('Me');
     }
+    if (!message.pending)
+      $(messageElement).find('.message-pending').addClass('hidden');
+    else
+      $(messageElement).find('.message-pending').removeClass('hidden');
     $(messageElement).find(".message-content").text(message.message);
     $(messageElement).find(".message-date").text(dateFormat(new Date(message.date), "shortTime"));
-    messageContainer.append(messageElement);
+    
+    if (needsInsert) {
+      if (messageContainer == null)
+        messageContainer = $('#conversation-' + conversation.id).find('#contact-messages-internal');
+        if (messageContainer == null || messageContainer.length == 0) {
+          page.addConversation(message.conversation);
+          messageContainer = $('#conversation-' + conversation.id).find('#contact-messages-internal');
+        }
+      
+      if (afterMessage == null)
+        messageContainer.append(messageElement);
+      else
+        $(messageElement).insertAfter('#message-' + afterMessage.id);
+    }
   }
   
-  this.addConversation = function(conversation, existing) {
+  this.addConversationToTop = function(conversation, existing) {
     var conversationElement = existing;
     if (conversationElement == null) {
       conversationElement = $('#conversation-' + conversation.id);
     }
     
+    var conversationTemplate = $('#conversation-template');
     if (conversationElement == null || conversationElement.length == 0) {
       var contentContainer = $('#content-container');
-      var conversationTemplate = $('#conversation-template');
       conversationElement = conversationTemplate.clone();
       conversationElement.attr('id', 'conversation-' + conversation.id);
       conversationElement.removeClass("hidden");
-      contentContainer.append(conversationElement);
+      //contentContainer.append(conversationElement);
+      $(conversationElement).insertAfter(conversationTemplate);
     }
-    conversationElement.addClass("conversation");
+    else {
+      conversationElement.detach();
+      conversationElement.insertAfter(conversationTemplate);
+    }
+//    conversationElement.addClass("conversation");
     
     var messageTemplate = $('#contact-message-template');
     var messageContainer = $(conversationElement).find('#contact-messages-internal');
-    var messages = conversation.messages.slice(Math.max(0, conversation.messages.length - 10), conversation.messages.length);
+    var messageKeys = Object.keys(conversation.messages);
+    messageKeys.sort();
+    messageKeys = messageKeys.slice(Math.max(0, messageKeys.length - 10), messageKeys.length);
+    //var messages = conversation.messages.slice(Math.max(0, conversation.messages.length - 10), conversation.messages.length);
+    var messages = [];
+    $.each(messageKeys, function(index, value) {
+      messages.push(conversation.messages[value]);
+    });
     var lastMessage = messages[messages.length - 1];
     
     $(conversationElement).find('.contact-number').text(conversation.number);
@@ -148,39 +187,54 @@ var page = new function() {
       contactNameElement.addClass("hidden");
     }
 
-    $.each(messages, function(index, message) {
-      page.addMessageToConversation(message, displayName, messageContainer, messageTemplate);
-    });
+    return conversationElement;
   }
   
-  this.lastRefresh = Date.now() - 3 * 24 * 60 * 60 * 1000;
+  this.lastRefresh = 0;
   
   this.refreshInbox = function() {
+    var lastRefresh = this.lastRefresh;
+    if (this.lastRefresh == 0)
+      this.lastRefresh = Date.now() - 3 * 24 * 60 * 60 * 1000;
+    
     console.log(page.lastRefresh);
-    desksms.getSms({ min_date: page.lastRefresh }, function(err, data) {
-      //console.log(data);
-      
-      var contacts = Object.keys(desksms.conversations);
-      contacts.sort(function(a,b) {
-        a = desksms.conversations[a];
-        b = desksms.conversations[b];
-        if (a.latestMessageDate == b.latestMessageDate)
-          return;
-        
-        if (a.latestMessageDate > b.latestMessageDate)
-          return -1;
-        
-        return 1;
+    desksms.getSms({ after_date: page.lastRefresh }, function(err, data) {
+      if (data.data.length == 0)
+        return;
+      var conversations = {};
+      $.each(data.data, function(index, message) {
+        conversations[message.conversation.id] = message.conversation;
+        page.lastRefresh = Math.max(page.lastRefresh, message.date);
       });
       
-      var conversations = [];
-      $.each(contacts, function(index, contact) {
-        var conversation = desksms.conversations[contact];
-        conversations.push(conversation);
-        
-        page.addConversation(conversation);
+      conversations = sorty(Object.keys(conversations), function(key) {
+        return conversations[key].latestMessageDate;
       });
-      //console.log(conversations);
+      conversations = select(conversations, function(index, value) {
+        return value;
+      });
+      
+      $.each(conversations, function(index, conversation) {
+        page.addConversationToTop(desksms.findConversation(conversation));
+      });
+
+      var messages = data.data;
+      if (lastRefresh == 0) {
+        var convoCounter = {};
+        messages.reverse();
+        messages = filter(messages, function(index, message) {
+          if (!convoCounter[message.conversation.id])
+            convoCounter[message.conversation.id] = 0;
+          if (++convoCounter[message.conversation.id] >= 10)
+            return null;
+          return message;
+        });
+        messages.reverse();
+      }
+      
+      $.each(messages, function(index, message) {
+        page.addMessageToConversation(message);
+      });
       
       page.setClickHandlers();
     });
@@ -200,6 +254,9 @@ var page = new function() {
         loginButton.attr('href', desksms.getLogoutUrl());
         
         page.refreshInbox();
+        setInterval(function() {
+          page.refreshInbox();
+        }, 30000);
       }
     });
     
@@ -211,7 +268,6 @@ var page = new function() {
     var conversation = desksms.findConversation(contact.number);
     if (conversation == null)
       return;
-    console.log(contact);
     
     if (contact.photo)
       $("#contact-image-" + conversation.id).attr('src', contact.photo);

@@ -1,3 +1,18 @@
+function Conversation(number) {
+  this.number = number;
+  this.numbersOnly = contacts.numbersOnly(number);
+  this.id = this.numbersOnly;
+  this.messages = {};
+  this.latestMessageDate = 0;
+}
+
+Conversation.prototype.addMessage = function(message) {
+  message.id = this.numbersOnly + '-' + message.date;
+  message.conversation = this;
+  this.latestMessageDate = Math.max(this.latestMessageDate, message.date);
+  this.messages[message.id] = message;
+}
+
 var desksms = new function() {
   this.BASE_URL = "https://desksms.appspot.com";
   this.API_URL = this.BASE_URL + "/api/v1";
@@ -41,16 +56,14 @@ var desksms = new function() {
       if (data) {
         // bucket these into conversations
         $.each(data.data, function(index, message) {
-          message.id = Crypto.MD5(message.number + '/' + message.date);
           var conversation = desksms.findConversation(message.number);
           if (conversation == null) {
             var n = contacts.numbersOnly(message.number);
-            conversation = desksms.conversations[n] = {messages: [], numbersOnly: n, latestMessageDate: message.date, number: message.number, id: Crypto.MD5(message.number) };
+            //conversation = desksms.conversations[n] = {messages: [], numbersOnly: n, latestMessageDate: message.date, number: message.number, id: Crypto.MD5(message.number) };
+            conversation = desksms.conversations[n] = new Conversation(message.number);
           }
-          
-          message.conversation = conversation;
-          conversation.latestMessageDate = Math.max(conversation.latestMessageDate, message.date);
-          conversation.messages.push(message);
+
+          conversation.addMessage(message);
         });
       }
       
