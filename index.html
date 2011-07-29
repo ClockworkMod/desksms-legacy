@@ -1,13 +1,14 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
+<title>DeskSMS</title>
 <head>
+  <script type="text/javascript" src="http://crypto-js.googlecode.com/files/2.3.0-crypto-md5.js"></script>
+  <script src="script/date.format.js"></script>
   <script src="script/sprintf.js"></script>
   <script src="script/jquery-1.6.2.js"></script>
   <script src="script/jsonp.js"></script>
   <script src="script/jquery.query-2.1.7.js"></script>
   <script src="script/jquery.cookie.js"></script>
   <script src="script/desksms.js"></script>
-  <script src="script/main.js"></script>
   <script src="script/contacts.js"></script>
   <script src="script/contacts/google.js"></script>
   <script src="script/contacts/facebook.js"></script>
@@ -15,12 +16,13 @@
   <link rel="stylesheet" href="style/bubble.css"></link>
   <link href='http://fonts.googleapis.com/css?family=Carme' rel='stylesheet' type='text/css'></link>
   <link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'></link>
+  <script src="script/main.js"></script>
 </head>
 <body>
   <div class="page-header">
     <span class="desksms-header">DeskSMS</span>
     <span class="email-header"><a href="#" id="desksms-login">Login</a></span>
-    <span class="connect-google-header"><a href="javascript:googleContacts.performAuthorizationRequest()" id="connect-google">Connect to Google Contacts</a></span>
+    <span class="connect-google-header"><a href="javascript:googleContacts.performAuthorizationRequest();" id="connect-google">Connect to Google Contacts</a></span>
   </div>
   <!--
   <div class="search-header" align="center">
@@ -35,17 +37,17 @@
     
     
     <div id="conversation-template" class="conversation-template hidden">
-      <div class="contact-header">
+      <div class="contact-header" align="center">
         <img class="contact-image" src='images/contact.png'></img>
         <div class="contact-name">Joe Blow</div>
         <div class="contact-number">(206)555-1234</div>
-        <div class="contact-last-contact">2 days ago</div>
+        <div class="contact-last-message-date">2 days ago</div>
       </div>
       <div class="contact-messages">
         <div class='triangle-border left'>
           <div class="contact-messages-internal" id="contact-messages-internal">
             <div class="contact-message-template hidden" id="contact-message-template">
-              <span class="message-from">Me</span><span>: </span><span class="message-content">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span><span class="message-date"> 4:45PM</span>
+              <span class="message-from">Me</span><span>: </span><span class="message-content">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span><span> </span><span class="message-date"> 4:45PM</span>
             </div>
           </div>
           <div class="message-panel-footer">
@@ -53,12 +55,13 @@
               <input class="rounded contact-text-content"></input>
             </div>
             <div>
-              <span><a class="contact-call" href="javascript:void()">Call</a></span>
-              <span><a class="contact-text" href="javascript:void()">Text</a></span>
+              <span><a class="contact-call" href="javascript:void(0);">Call</a></span>
+              <span><a class="contact-text" href="javascript:void(0);">Text</a></span>
             </div>
           </div>
         </div>
       </div>
+      <div style="clear: both;"></div>
     </div>
     
     

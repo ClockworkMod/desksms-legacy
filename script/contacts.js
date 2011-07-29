@@ -16,12 +16,22 @@ var contacts = new function() {
     return ret;
   }
   
+  var contactListeners = [];
+  
+  this.onNewContact = function(listener) {
+    contactListeners.push(listener);
+  }
+  
   this.addContact = function(contact) {
     this.list.push(contact);
     contact.numbersOnly = this.numbersOnly(contact.number);
+    
+    $.each(contactListeners, function(index, listener) {
+      listener(contact);
+    });
   }
   
-  this.findContact = function(number, list) {
+  this.findNumber = function(number, list) {
     if (list == null)
       list = this.list;
     var numbersOnly = this.numbersOnly(number);

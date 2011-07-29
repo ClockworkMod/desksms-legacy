@@ -1,4 +1,43 @@
 var page = new function() {
+  this.longAgo = function(utc)
+   {
+      //Consider making more options?
+      var theDate = new Date(utc);
+      var diff = (new Date()).getTime() - theDate.getTime();
+      var dayCount = Math.floor(diff / 86400000);
+      var howLong = '';
+
+      if (dayCount >= 14)
+          howLong = sprintf('%s %s ago', Math.floor(dayCount / 7), 'weeks');
+      else if (dayCount > 1)
+          howLong = sprintf('%s %s ago', dayCount, 'days');
+      else if (dayCount == 1)
+          howLong = '1 day ago';
+      else
+      {
+          //hours
+          if (Math.floor(diff / 3600000) > 2)
+              howLong = sprintf('%s %s ago', Math.floor(diff / 3600000), 'hours');
+          // More than an hour
+          else if (diff / 3600000.0 > 1.5)
+              howLong = 'Over an hour ago';
+          else if (Math.floor(diff / 3600000) == 1)
+              howLong = '1 hour ago';
+          //minutes
+          else if (Math.floor(diff / 60000) >= 1)
+              howLong = sprintf('%s %s ago', Math.floor(diff / 60000), 'minutes');
+          else if (Math.floor(diff / 60000) == 1)
+              howLong = '1 minute ago';
+          else if (Math.floor(diff / 1000) > 10)
+              howLong = sprintf('%s %s ago', Math.floor(diff / 1000), 'seconds');
+          //Just now
+          else
+              howLong = 'Just now';
+      }
+
+      return howLong;
+  }
+  
   this.setClickHandlers = function() {
     $('.contact-text').click(function(event) {
       var message = $(event.target).parents('.conversation-template');
@@ -17,42 +56,57 @@ var page = new function() {
       input.blur(function(event) {
         setTimeout(function() {
           hidden.hide();
-        }, 200)
+        }, 200);
       });
       
       input.keypress(function(event) {
-        if(event.which != 13)
+        if (event.which != 13)
           return;
-        console.log('enter' + Date());
+        var contents = input.val();
+        if (contents == "")
+          return;
+        console.log(contents);
+        var number = $(message).find('.contact-number').text();
+        desksms.sendSms(number, contents, function(err, data) {
+          console.log(err);
+          console.log(data);
+        });
+        input.blur();
       });
     });
+  }
+  
+  this.addMessageToConversation = function(message, conversation) {
+    
   }
   
   this.addConversation = function(conversation) {
     var contentContainer = $('#content-container');
     var conversationTemplate = $('#conversation-template');
     var conversationElement = conversationTemplate.clone();
+    conversationElement.addClass("conversation");
     
     var messageTemplate = $('#contact-message-template');
-    
     var messageContainer = $(conversationElement).find('#contact-messages-internal');
+    var messages = conversation.messages.slice(Math.max(0, conversation.messages.length - 10), conversation.messages.length);
+    var lastMessage = messages[messages.length - 1];
     
-    var messages = conversation.messages.slice(conversation.messages.length - 10, conversation.messages.length);
-    
-    $(conversationElement).find('.contact-name').text(conversation.number);
     $(conversationElement).find('.contact-number').text(conversation.number);
+    $(conversationElement).find('.contact-last-message-date').text(page.longAgo(lastMessage.date));
     
-    var contact = contacts.findContact(conversation.number);
+    var contact = contacts.findNumber(conversation.number);
     var displayName = conversation.number;
+    var contactImage = $(conversationElement).find('.contact-image').attr('id', conversation.id);
+    var contactNameElement = $(conversationElement).find(".contact-name").attr('id', 'contact-name-' + conversation.id);
     if (contact) {
       if (contact.photo) {
-        $(conversationElement).find('.contact-image').attr('src', contact.photo);
+        contactImage.attr('src', contact.photo);
       }
       displayName = contact.name;
-      $(conversationElement).find(".contact-name").text(contact.name).removeClass("hidden");
+      contactNameElement.text(contact.name).removeClass("hidden");
     }
     else {
-      $(conversationElement).find(".contact-name").addClass("hidden");
+      contactNameElement.addClass("hidden");
     }
 
     $.each(messages, function(index, message) {
@@ -60,9 +114,16 @@ var page = new function() {
 
       var date = new Date(message.date);
       messageElement.removeClass("hidden");
-      //$(messageElement).find(".message-date").text(message.type == "incoming" ? "Me" : message.number);
-      $(messageElement).find(".message-from").text(message.type == "incoming" ? displayName : "Me");
+      var from = $(messageElement).find(".message-from");
+      if (message.type == 'incoming') {
+        from.addClass('message-from-' + conversation.id);
+        from.text(displayName);
+      }
+      else {
+        from.text('Me');
+      }
       $(messageElement).find(".message-content").text(message.message);
+      $(messageElement).find(".message-date").text(dateFormat(new Date(message.date), "shortTime"));
       messageContainer.append(messageElement);
     });
     
@@ -70,8 +131,11 @@ var page = new function() {
     contentContainer.append(conversationElement);
   }
   
+  this.lastRefresh = Date.now() - 3 * 24 * 60 * 60 * 1000;
+  
   this.refreshInbox = function() {
-    desksms.getSms(null, function(err, data) {
+    console.log(page.lastRefresh);
+    desksms.getSms({ min_date: page.lastRefresh }, function(err, data) {
       //console.log(data);
       
       var contacts = Object.keys(desksms.conversations);
@@ -119,5 +183,15 @@ var page = new function() {
     
     
     page.setClickHandlers();
+  });
+  
+  contacts.onNewContact(function(contact) {
+    var conversation = desksms.findConversation(contact.number);
+    if (conversation == null)
+      return;
+    console.log(contact);
+    
+    $("#contact-name-" + conversation.id).text(contact.name).removeClass("hidden");
+    $(".message-from-" + conversation.id).text(contact.name).removeClass("hidden");
   });
 }

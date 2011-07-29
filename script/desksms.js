@@ -25,6 +25,10 @@ var desksms = new function() {
     jsonp(this.WHOAMI_URL, cb);
   }
   
+  this.findConversation = function(number) {
+    return contacts.findNumber(number, desksms.conversations);
+  }
+  
   /*
     options = {
       max_date: null,
@@ -37,14 +41,14 @@ var desksms = new function() {
       if (data) {
         // bucket these into conversations
         $.each(data.data, function(index, message) {
-          var contact = contacts.findContact(message.number, desksms.conversations);
-          if (contact == null) {
+          var conversation = desksms.findConversation(message.number);
+          if (conversation == null) {
             var n = contacts.numbersOnly(message.number);
-            contact = desksms.conversations[n] = {messages: [], numbersOnly: n, latestMessageDate: message.date, number: message.number};
+            conversation = desksms.conversations[n] = {messages: [], numbersOnly: n, latestMessageDate: message.date, number: message.number, id: Crypto.MD5(message.number) };
           }
           
-          contact.latestMessageDate = Math.max(contact.latestMessageDate, message.date);
-          contact.messages.push(message);
+          conversation.latestMessageDate = Math.max(conversation.latestMessageDate, message.date);
+          conversation.messages.push(message);
         });
       }
       
