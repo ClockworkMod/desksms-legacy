@@ -220,6 +220,14 @@ var page = new function() {
 
       var messages = data.data;
       if (lastRefresh == 0) {
+        var contentStatus = $('#content-status');
+        if (messages.length == 0) {
+          contentStatus.text('You are successfully logged in, but no messages were found! Please verify the DeskSMS Android application is installed and syncing SMS on your phone.')
+        }
+        else {
+          //contentStatus.hide();
+          contentStatus.text('DeskSMS')
+        }
         var convoCounter = {};
         messages.reverse();
         messages = filter(messages, function(index, message) {

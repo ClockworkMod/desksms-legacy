@@ -148,3 +148,9 @@ input.rounded {
 .hidden {
     display: none;
 }
+
+.content-status {
+    padding: 20px;
+    background-color: #EEEEEE;
+    font-size: 24px;
+}
