@@ -96,7 +96,7 @@ var page = new function() {
     
     var contact = contacts.findNumber(conversation.number);
     var displayName = conversation.number;
-    var contactImage = $(conversationElement).find('.contact-image').attr('id', conversation.id);
+    var contactImage = $(conversationElement).find('.contact-image').attr('id', 'contact-image-' + conversation.id);
     var contactNameElement = $(conversationElement).find(".contact-name").attr('id', 'contact-name-' + conversation.id);
     if (contact) {
       if (contact.photo) {
@@ -191,6 +191,8 @@ var page = new function() {
       return;
     console.log(contact);
     
+    if (contact.photo)
+      $("#contact-image-" + conversation.id).attr('src', contact.photo);
     $("#contact-name-" + conversation.id).text(contact.name).removeClass("hidden");
     $(".message-from-" + conversation.id).text(contact.name).removeClass("hidden");
   });

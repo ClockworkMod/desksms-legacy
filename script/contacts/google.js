@@ -24,7 +24,7 @@ var googleContacts = new function() {
           console.log(err);
           return;
         }
-        
+                  
         $.each(data.feed.entry, function(index, contact) {
           if (!contact['gd$phoneNumber'])
             return;
@@ -49,6 +49,7 @@ var googleContacts = new function() {
             contacts.addContact(entry);
           });
         });
+        
       },
       {oauth_token: token});
     }
