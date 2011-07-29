@@ -41,12 +41,14 @@ var desksms = new function() {
       if (data) {
         // bucket these into conversations
         $.each(data.data, function(index, message) {
+          message.id = Crypto.MD5(message.number + '/' + message.date);
           var conversation = desksms.findConversation(message.number);
           if (conversation == null) {
             var n = contacts.numbersOnly(message.number);
             conversation = desksms.conversations[n] = {messages: [], numbersOnly: n, latestMessageDate: message.date, number: message.number, id: Crypto.MD5(message.number) };
           }
           
+          message.conversation = conversation;
           conversation.latestMessageDate = Math.max(conversation.latestMessageDate, message.date);
           conversation.messages.push(message);
         });

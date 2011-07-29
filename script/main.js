@@ -76,14 +76,53 @@ var page = new function() {
     });
   }
   
-  this.addMessageToConversation = function(message, conversation) {
+  this.addMessageToConversation = function(message, displayName, messageContainer, messageTemplate, messageElement) {
+    var conversation = message.conversation;
+    if (messageElement == null) {
+      messageElement = $('#message-' + message.id);
+    }
     
+    if (messageElement == null || messageElement.length == 0) {
+      if (messageTemplate == null)
+        messageTemplate = $('#contact-message-template');
+
+        messageElement = messageTemplate.clone();
+        messageElement.attr('id', 'message-' + message.id);
+        messageElement.removeClass("hidden");
+        if (messageContainer == null)
+          messageContainer = $('#conversation-' + conversation.id).find('#contact-messages-internal');
+        messageContainer.append(messageElement);
+    }
+    
+    var date = new Date(message.date);
+    messageElement.removeClass("hidden");
+    var from = $(messageElement).find(".message-from");
+    if (message.type == 'incoming') {
+      from.addClass('message-from-' + conversation.id);
+      from.text(displayName);
+    }
+    else {
+      from.text('Me');
+    }
+    $(messageElement).find(".message-content").text(message.message);
+    $(messageElement).find(".message-date").text(dateFormat(new Date(message.date), "shortTime"));
+    messageContainer.append(messageElement);
   }
   
-  this.addConversation = function(conversation) {
-    var contentContainer = $('#content-container');
-    var conversationTemplate = $('#conversation-template');
-    var conversationElement = conversationTemplate.clone();
+  this.addConversation = function(conversation, existing) {
+    var conversationElement = existing;
+    if (conversationElement == null) {
+      conversationElement = $('#conversation-' + conversation.id);
+    }
+    
+    if (conversationElement == null || conversationElement.length == 0) {
+      var contentContainer = $('#content-container');
+      var conversationTemplate = $('#conversation-template');
+      conversationElement = conversationTemplate.clone();
+      conversationElement.attr('id', 'conversation-' + conversation.id);
+      conversationElement.removeClass("hidden");
+      contentContainer.append(conversationElement);
+    }
     conversationElement.addClass("conversation");
     
     var messageTemplate = $('#contact-message-template');
@@ -110,25 +149,8 @@ var page = new function() {
     }
 
     $.each(messages, function(index, message) {
-      var messageElement = messageTemplate.clone();
-
-      var date = new Date(message.date);
-      messageElement.removeClass("hidden");
-      var from = $(messageElement).find(".message-from");
-      if (message.type == 'incoming') {
-        from.addClass('message-from-' + conversation.id);
-        from.text(displayName);
-      }
-      else {
-        from.text('Me');
-      }
-      $(messageElement).find(".message-content").text(message.message);
-      $(messageElement).find(".message-date").text(dateFormat(new Date(message.date), "shortTime"));
-      messageContainer.append(messageElement);
+      page.addMessageToConversation(message, displayName, messageContainer, messageTemplate);
     });
-    
-    conversationElement.removeClass("hidden");
-    contentContainer.append(conversationElement);
   }
   
   this.lastRefresh = Date.now() - 3 * 24 * 60 * 60 * 1000;
