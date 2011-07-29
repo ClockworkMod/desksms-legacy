@@ -114,10 +114,10 @@ var page = new function() {
     else {
       from.text('Me');
     }
-    if (!message.pending)
-      $(messageElement).find('.message-pending').addClass('hidden');
-    else
+    if (message.pending == true)
       $(messageElement).find('.message-pending').removeClass('hidden');
+    else
+      $(messageElement).find('.message-pending').addClass('hidden');
     $(messageElement).find(".message-content").text(message.message);
     $(messageElement).find(".message-date").text(dateFormat(new Date(message.date), "shortTime"));
     
