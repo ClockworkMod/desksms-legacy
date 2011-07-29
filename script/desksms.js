@@ -61,6 +61,7 @@ var desksms = new function() {
             var n = contacts.numbersOnly(message.number);
             //conversation = desksms.conversations[n] = {messages: [], numbersOnly: n, latestMessageDate: message.date, number: message.number, id: Crypto.MD5(message.number) };
             conversation = desksms.conversations[n] = new Conversation(message.number);
+            conversation.contact = contacts.findNumber(conversation.number);
           }
 
           conversation.addMessage(message);
