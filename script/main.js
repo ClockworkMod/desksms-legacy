@@ -140,6 +140,8 @@ var page = new function() {
   }
   
   this.addConversationToTop = function(conversation, existing) {
+    if (conversation == null)
+      return;
     var conversationElement = existing;
     if (conversationElement == null) {
       conversationElement = $('#conversation-' + conversation.id);
