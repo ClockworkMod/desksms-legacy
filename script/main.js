@@ -200,7 +200,7 @@ var page = new function() {
   this.refreshInbox = function() {
     var lastRefresh = this.lastRefresh;
     if (this.lastRefresh == 0)
-      this.lastRefresh = Date.now() - 3 * 24 * 60 * 60 * 1000;
+      this.lastRefresh = new Date().getTime() - 3 * 24 * 60 * 60 * 1000;
     
     console.log(page.lastRefresh);
     desksms.getSms({ after_date: page.lastRefresh }, function(err, data) {
