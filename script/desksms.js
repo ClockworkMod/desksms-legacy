@@ -54,6 +54,8 @@ var desksms = new function() {
   this.getSms = function(options, cb) {
     jsonp(this.SMS_URL, function(err, data) {
       if (data) {
+        if (data.data.length == 0)
+          return;
         // bucket these into conversations
         $.each(data.data, function(index, message) {
           var conversation = desksms.findConversation(message.number);
@@ -84,4 +86,11 @@ var desksms = new function() {
     jsonp(this.OUTBOX_URL, cb, args);
   }
   
+  contacts.onNewContact(function(contact) {
+    var conversation = desksms.findConversation(contact.number);
+    if (conversation == null)
+      return;
+    
+    conversation.contact = contact;
+  });
 };
