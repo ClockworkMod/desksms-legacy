@@ -278,8 +278,11 @@ var page = new function() {
     
     var query = $.query.load(window.location.hash);
     var extension = query.get('extension');
-    if (extension)
+    if (extension) {
       $('.link').attr('target', '_blank');
+      $('.github-fork').hide();
+      $('#market-link').attr('href', 'http://www.clockworkmod.com/desksms');
+    }
     $('#connect-google').attr('href', googleContacts.getAuthorizationUrl());
     
     page.setClickHandlers();
