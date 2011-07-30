@@ -38,12 +38,35 @@ var page = new function() {
       return howLong;
   }
   
+  this.confirmContactAction = function(conversationElement, question, yes, no, cb) {
+    var dialog = $(conversationElement).find('.contact-action-confirm-dialog');
+    dialog.show();
+    setTimeout(function() {
+      dialog.fadeOut(500);
+    }, 5000);
+    var yesElement = $(conversationElement).find('.contact-action-confirm-yes');
+    var noElement = $(conversationElement).find('.contact-action-confirm-no');
+    var questionElement = $(conversationElement).find('.contact-action-confirm-question');
+    questionElement.text(question);
+    yesElement.text(yes);
+    noElement.text(no);
+    yesElement.unbind('click');
+    yesElement.click(function() {
+      cb();
+      dialog.fadeOut(200);
+    });
+    noElement.unbind('click');
+    noElement.click(function() {
+      dialog.fadeOut(200);
+    });
+  }
+  
   this.setClickHandlers = function() {
     var contactText = $('.contact-text');
     contactText.unbind('click');
     
     contactText.click(function(event) {
-      var message = $(event.target).parents('.conversation-template');
+      var conversationElement = $(event.target).parents('.conversation-template');
 
       var footer = $(event.target).parents('.message-panel-footer');
       var hidden = footer.find('.contact-text-container');
@@ -68,7 +91,7 @@ var page = new function() {
         var contents = input.val();
         if (contents == "")
           return;
-        var number = $(message).find('.contact-number').text();
+        var number = $(conversationElement).find('.contact-number').text();
         desksms.sendSms(number, contents, function(err, data) {
           if (err) {
             console.log(err);
@@ -94,25 +117,41 @@ var page = new function() {
     contactCall.unbind('click');
     
     contactCall.click(function(event) {
-      var message = $(event.target).parents('.conversation-template');
-      var number = $(message).find('.contact-number').text();
-      var contentStatus = $('#content-status');
+      var conversationElement = $(event.target).parents('.conversation-template');
+      var number = $(conversationElement).find('.contact-number').text();
       var displayName = contacts.getDisplayName(number);
-      contentStatus.text(sprintf('Dialing %s on your phone...', displayName));
-      $('html, body').animate({
-          scrollTop: 0
-      }, 500);
-      desksms.dialNumber(number, function(err, data) {
-        if (err || data.error) {
-          contentStatus.text(sprintf('Error dialing %s...', displayName));
-        }
-        
-        contentStatus.fadeOut(10000, function() {
-          contentStatus.show();
-          contentStatus.text('DeskSMS');
+      
+      page.confirmContactAction(conversationElement, sprintf("Call %s on your phone?", displayName), "yes", "no", function() {
+        var contentStatus = $('#content-status');
+        contentStatus.text(sprintf('Dialing %s on your phone...', displayName));
+        $('html, body').animate({
+            scrollTop: 0
+        }, 500);
+        desksms.dialNumber(number, function(err, data) {
+          if (err || data.error) {
+            contentStatus.text(sprintf('Error dialing %s...', displayName));
+          }
+
+          contentStatus.fadeOut(10000, function() {
+            contentStatus.show();
+            contentStatus.text('DeskSMS');
+          });
         });
       });
     });
+    
+    var contactCall = $('.contact-delete');
+    contactCall.unbind('click');
+    contactCall.click(function(event) {
+      var conversationElement = $(event.target).parents('.conversation-template');
+      var number = $(conversationElement).find('.contact-number').text();
+      var displayName = contacts.getDisplayName(number);
+      
+      page.confirmContactAction(conversationElement, sprintf("Delete conversation with %s?", displayName), "yes", "no", function() {
+        desksms.deleteConversation(number);
+      });
+    });
+    
   }
   
   this.addMessageToConversation = function(message, afterMessage, displayName, messageContainer, messageTemplate, messageElement) {

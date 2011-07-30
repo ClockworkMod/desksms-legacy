@@ -126,6 +126,11 @@ input.rounded {
 }
 
 .contact-text {
+    padding-right: 14px;
+}
+
+.contact-delete {
+    padding-right: 14px;
 }
 
 .contact-text-container {
@@ -153,4 +158,16 @@ input.rounded {
     padding: 20px;
     background-color: #EEEEEE;
     font-size: 24px;
+}
+
+.contact-action-confirm-dialog {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.contact-action-confirm-yes {
+    padding-right: 20px;
+}
+
+.contact-action-confirm-no {
 }

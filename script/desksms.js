@@ -98,4 +98,19 @@ var desksms = new function() {
   this.dialNumber = function(number, cb) {
     jsonp(this.DIAL_URL, cb, { number: number });
   }
+  
+  this.deleteConversation = function(number) {
+    var conversation = this.findConversation(number);
+    if (conversation == null)
+      return;
+    var numbers = {};
+    $.each(conversation.messages, function(index, message) {
+      numbers[message.number] = true;
+    });
+    
+    numbers = keys(numbers);
+    $.each(numbers, function(index, messageNumber) {
+      jsonp(desksms.SMS_URL, null, { operation: "DELETE", number: messageNumber });
+    });
+  }
 };
