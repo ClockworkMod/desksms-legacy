@@ -269,8 +269,8 @@ var page = new function() {
           return;
         }
 
-        loginButton.text("Logout: " + data.email);
         loginButton.attr('href', desksms.getLogoutUrl());
+        loginButton.text("Logout: " + data.email);
         
         page.refreshInbox();
         setInterval(function() {
