@@ -35,7 +35,10 @@ var googleContacts = new function() {
           });
           $.each(contact['gd$phoneNumber'], function(index, phoneEntry) {
             var type = phoneEntry['rel'];
-            type = type.substring(type.indexOf('#') + 1);
+            if (type)
+              type = type.substring(type.indexOf('#') + 1);
+            else
+              type = null
             
             var number = phoneEntry['$t'];
             var name = contact.title['$t'];
