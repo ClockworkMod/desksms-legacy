@@ -241,7 +241,8 @@ var page = new function() {
           return message;
         });
         messages.reverse();
-        
+      }
+      else {
         $.each(messages, function(index, message) {
           notifications.showMessageNotification(message);
         });
