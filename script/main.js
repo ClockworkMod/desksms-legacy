@@ -244,7 +244,8 @@ var page = new function() {
       }
       else {
         $.each(messages, function(index, message) {
-          notifications.showMessageNotification(message);
+          if (message.type == 'incoming')
+            notifications.showMessageNotification(message);
         });
       }
       
@@ -282,6 +283,7 @@ var page = new function() {
       $('.link').attr('target', '_blank');
       $('.github-fork').hide();
       $('#market-link').attr('href', 'http://www.clockworkmod.com/desksms');
+      $('.content-container').css('width', '95%');
     }
     $('#connect-google').attr('href', googleContacts.getAuthorizationUrl());
     
