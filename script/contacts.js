@@ -10,6 +10,8 @@ var contacts = new function() {
   this.numbersOnly = function(number) {
     var ret = '';
     $.each(number, function(index, c) {
+      // ie bug fix
+      c = number.charAt(index);
       if (c >= '0' && c <= '9')
         ret += c;
     });
