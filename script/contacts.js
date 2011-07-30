@@ -37,7 +37,7 @@ var contacts = new function() {
     var numbersOnly = this.numbersOnly(number);
     var ret = null;
     $.each(list, function(index, entry) {
-      if (number == entry.number) {
+      if (number == entry.number || entry.numbersOnly == numbersOnly) {
         ret = entry;
         return;
       }
