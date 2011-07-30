@@ -279,8 +279,13 @@ var page = new function() {
     
     page.setClickHandlers();
   });
-  
+
+  var successfullyRetrievedContact = false;
   contacts.onNewContact(function(contact) {
+    if (!successfullyRetrievedContact) {
+      $('.connect-google-header').hide();
+      successfullyRetrievedContact = true;
+    }
     var conversation = desksms.findConversation(contact.number);
     if (conversation == null)
       return;

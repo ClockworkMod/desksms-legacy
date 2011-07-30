@@ -28,4 +28,10 @@ var notifications = new function() {
         $('.enable-chrome-notifications').removeClass('hidden');
     }
   });
+  
+  this.requestPermissions = function() {
+    webkitNotifications.requestPermission(function() {
+      $('.enable-chrome-notifications').hide();
+    });
+  }
 }
