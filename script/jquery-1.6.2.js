@@ -1004,7 +1004,7 @@ jQuery.extend({
 						args = args || [];
 						firing = 1;
 						try {
-							while( callbacks[ 0 ] ) {
+							while( callbacks.length > 0 ) {
 								callbacks.shift().apply( context, args );
 							}
 						}
