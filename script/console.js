@@ -1,5 +1,5 @@
 if (!window.console) {
-  window.console = {};
-  window.console.log = function() {
+  console = {};
+  console.log = function() {
   }
 }
