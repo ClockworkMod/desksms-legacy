@@ -35,7 +35,7 @@ a:visited {
     padding-right: 15px;
 }
 
-.desksms-header {
+.desksms-header a {
     font-weight: bold;
     color: #E27318;
 }
