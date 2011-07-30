@@ -1,6 +1,6 @@
 var notifications = new function() {
   this.showNotification = function(icon, title, message) {
-    if (webkitNotifications) {
+    if (window.webkitNotifications) {
       console.log(webkitNotifications.checkPermission());
       if (webkitNotifications.checkPermission() != 0)
         return;
@@ -23,7 +23,7 @@ var notifications = new function() {
   }
   
   $(document).ready(function() {
-    if (webkitNotifications) {
+    if (window.webkitNotifications) {
       if (webkitNotifications.checkPermission() != 0)
         $('.enable-chrome-notifications').removeClass('hidden');
     }
