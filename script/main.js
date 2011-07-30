@@ -109,7 +109,7 @@ var page = new function() {
     var from = $(messageElement).find(".message-from");
     var displayName = message.number;
     if (message.conversation.contact)
-      displayName = message.conversation.contact.number;
+      displayName = message.conversation.contact.name;
     if (message.type == 'incoming') {
       from.addClass('message-from-' + conversation.id);
       from.text(displayName);
