@@ -22,8 +22,10 @@ var notifications = new function() {
     this.showNotification(icon, title, message.message);
   }
   
-  if (webkitNotifications) {
-    if (webkitNotifications.checkPermission() != 0)
-      $('.enable-chrome-notifications').removeClass('hidden').show();
-  }
+  $(document).ready(function() {
+    if (webkitNotifications) {
+      if (webkitNotifications.checkPermission() != 0)
+        $('.enable-chrome-notifications').removeClass('hidden');
+    }
+  });
 }
