@@ -33,6 +33,13 @@ var contacts = new function() {
     });
   }
   
+  this.getDisplayName = function(number) {
+    var contact = this.findNumber(number);
+    if (!contact || !contact.name)
+      return number;
+    return contact.name;
+  }
+  
   this.findNumber = function(number, list) {
     if (list == null)
       list = this.list;

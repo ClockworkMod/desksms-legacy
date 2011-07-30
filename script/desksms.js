@@ -20,6 +20,7 @@ var desksms = new function() {
   this.SETTINGS_URL = this.USER_URL + "/settings";
   this.SMS_URL = this.USER_URL + "/sms";
   this.CALL_URL = this.USER_URL + "/call";
+  this.DIAL_URL = this.USER_URL + "/dial";
   this.OUTBOX_URL = this.USER_URL + "/outbox";
   this.LOGIN_URL = this.API_URL + "/user/login?continue=%s";
   this.LOGOUT_URL = this.API_URL + "/user/logout?continue=%s";
@@ -93,4 +94,8 @@ var desksms = new function() {
     
     conversation.contact = contact;
   });
+  
+  this.dialNumber = function(number, cb) {
+    jsonp(this.DIAL_URL, cb, { number: number });
+  }
 };

@@ -39,7 +39,10 @@ var page = new function() {
   }
   
   this.setClickHandlers = function() {
-    $('.contact-text').click(function(event) {
+    var contactText = $('.contact-text');
+    contactText.unbind('click');
+    
+    contactText.click(function(event) {
       var message = $(event.target).parents('.conversation-template');
 
       var footer = $(event.target).parents('.message-panel-footer');
@@ -83,6 +86,28 @@ var page = new function() {
         });
         
         input.blur();
+      });
+    });
+    
+    
+    var contactCall = $('.contact-call');
+    contactCall.unbind('click');
+    
+    contactCall.click(function(event) {
+      var message = $(event.target).parents('.conversation-template');
+      var number = $(message).find('.contact-number').text();
+      var contentStatus = $('#content-status');
+      var displayName = contacts.getDisplayName(number);
+      contentStatus.text(sprintf('Dialing %s on your phone...', displayName));
+      desksms.dialNumber(number, function(err, data) {
+        if (err || data.error) {
+          contentStatus.text(sprintf('Error dialing %s...', displayName));
+        }
+        
+        contentStatus.fadeOut(10000, function() {
+          contentStatus.show();
+          contentStatus.text('DeskSMS');
+        });
       });
     });
   }
@@ -272,10 +297,11 @@ var page = new function() {
         loginButton.attr('href', desksms.getLogoutUrl());
         loginButton.text("Logout: " + data.email);
         
-        page.refreshInbox();
-        setInterval(function() {
+        var looper = function() {
+          setTimeout(looper, 30000);
           page.refreshInbox();
-        }, 30000);
+        };
+        looper();
       }
     });
     
