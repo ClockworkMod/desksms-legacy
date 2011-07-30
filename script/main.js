@@ -99,6 +99,9 @@ var page = new function() {
       var contentStatus = $('#content-status');
       var displayName = contacts.getDisplayName(number);
       contentStatus.text(sprintf('Dialing %s on your phone...', displayName));
+      $('html, body').animate({
+          scrollTop: $(contentStatus).offset().top
+      }, 500);
       desksms.dialNumber(number, function(err, data) {
         if (err || data.error) {
           contentStatus.text(sprintf('Error dialing %s...', displayName));
