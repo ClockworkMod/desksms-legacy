@@ -164,7 +164,7 @@ var page = new function() {
     
     var messageTemplate = $('#contact-message-template');
     var messageContainer = $(conversationElement).find('#contact-messages-internal');
-    var messageKeys = Object.keys(conversation.messages);
+    var messageKeys = keys(conversation.messages);
     messageKeys.sort();
     messageKeys = messageKeys.slice(Math.max(0, messageKeys.length - 10), messageKeys.length);
     //var messages = conversation.messages.slice(Math.max(0, conversation.messages.length - 10), conversation.messages.length);
@@ -212,7 +212,7 @@ var page = new function() {
         page.lastRefresh = Math.max(page.lastRefresh, message.date);
       });
       
-      conversations = sorty(Object.keys(conversations), function(key) {
+      conversations = sorty(keys(conversations), function(key) {
         return conversations[key].latestMessageDate;
       });
       conversations = select(conversations, function(index, value) {

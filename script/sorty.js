@@ -28,3 +28,11 @@ var filter = function(list, selectFunction) {
   });
   return ret;
 }
+
+var keys = function(o) {
+  var ret = [];
+  $.each(o, function(a, b) {
+    ret.push(a);
+  });
+  return ret;
+}
