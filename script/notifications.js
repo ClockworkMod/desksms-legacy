@@ -24,6 +24,6 @@ var notifications = new function() {
   
   if (webkitNotifications) {
     if (webkitNotifications.checkPermission() != 0)
-      $('.enable-chrome-notifications').removeClass('hidden');
+      $('.enable-chrome-notifications').removeClass('hidden').show();
   }
 }
