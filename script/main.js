@@ -271,6 +271,14 @@ var page = new function() {
     
     console.log(page.lastRefresh);
     desksms.getSms({ after_date: page.lastRefresh }, function(err, data) {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      if (data.data == null) {
+        console.log('no data returned from sms call');
+        return;
+      }
       if (data.data.length == 0)
         return;
       var conversations = {};
