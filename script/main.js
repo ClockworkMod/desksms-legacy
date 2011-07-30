@@ -100,7 +100,7 @@ var page = new function() {
       var displayName = contacts.getDisplayName(number);
       contentStatus.text(sprintf('Dialing %s on your phone...', displayName));
       $('html, body').animate({
-          scrollTop: $(contentStatus).offset().top
+          scrollTop: 0
       }, 500);
       desksms.dialNumber(number, function(err, data) {
         if (err || data.error) {
