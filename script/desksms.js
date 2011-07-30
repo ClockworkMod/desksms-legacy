@@ -29,11 +29,11 @@ var desksms = new function() {
   this.conversations = {};
   
   this.getLoginUrl = function() {
-    return sprintf(this.LOGIN_URL, window.location.href);
+    return sprintf(this.LOGIN_URL, encodeURIComponent(window.location.href));
   }
   
   this.getLogoutUrl = function() {
-    return sprintf(this.LOGOUT_URL, window.location.href);
+    return sprintf(this.LOGOUT_URL, encodeURIComponent(window.location.href));
   }
   
   this.whoami = function(cb) {
