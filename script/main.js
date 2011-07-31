@@ -423,6 +423,10 @@ var page = new function() {
     $(".message-from-" + conversation.id).text(contact.name).removeClass("hidden");
   });
   
+  this.setAutoComplete = function() {
+    
+  }
+  
   this.loadContactPhoto = function(photoElement, conversation, contact) {
     // if we don't have local cache, or this contact is from cache
     // just use the explicit url
