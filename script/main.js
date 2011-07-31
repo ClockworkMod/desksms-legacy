@@ -244,7 +244,7 @@ var page = new function() {
     $(conversationElement).find('.contact-number').text(conversation.number);
     $(conversationElement).find('.contact-last-message-date').text(page.longAgo(lastMessage.date));
     
-    var contact = contacts.findNumber(conversation.number);
+    var contact = conversation.contact;
     var displayName = conversation.number;
     var contactImage = $(conversationElement).find('.contact-image').attr('id', 'contact-image-' + conversation.id);
     var contactNameElement = $(conversationElement).find(".contact-name").attr('id', 'contact-name-' + conversation.id);
@@ -257,7 +257,7 @@ var page = new function() {
     }
     else {
       // try load from cache
-      contact = page.getCachedContact(conversation);
+      conversation.contact = contact = page.getCachedContact(conversation);
     }
 
     if (contact) {
@@ -266,11 +266,14 @@ var page = new function() {
         page.loadContactPhoto(contactImage, conversation, contact);
       }
       displayName = contact.name;
-      contactNameElement.text(contact.name).removeClass("hidden");
+      //contactNameElement.text(contact.name).removeClass("hidden");
     }
+    /*
     else {
       contactNameElement.addClass("hidden");
     }
+    */
+    contactNameElement.text(displayName).removeClass("hidden");
 
     return conversationElement;
   }
