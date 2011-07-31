@@ -427,11 +427,16 @@ var page = new function() {
     }
   }
   
+  this.cachedContacts = {};
   this.getCachedContact = function(conversation) {
     var key = 'contact-' + conversation.id;
+    var ret = this.cachedContacts[key];
+    if (ret)
+      return ret;
     try {
-      var ret = JSON.parse(localStorage[key]);
+      ret = JSON.parse(localStorage[key]);
       ret.fromCache = true;
+      this.cachedContacts[key] = ret;
       console.log('using cached contact');
       return ret;
     }
