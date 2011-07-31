@@ -4,6 +4,29 @@
 <dict>
 	<key>ESProjectShowHiddenFilesKey</key>
 	<false/>
+	<key>ESProjectWindowState</key>
+	<dict>
+		<key>ContentSize</key>
+		<string>{2560, 1408}</string>
+		<key>ProjectURL</key>
+		<string>file://localhost/Volumes/Data/src/desksms/desksms.esproj/</string>
+		<key>StateType</key>
+		<string>ProjectWindow</string>
+		<key>TopLeftPoint</key>
+		<string>{0, 1578}</string>
+	</dict>
+	<key>com.macrabbit.Espresso.FileManager.DisclosureCollapsed</key>
+	<false/>
+	<key>com.macrabbit.Espresso.FileManager.FileControllerState</key>
+	<dict>
+		<key>ExpandedURLs</key>
+		<array>
+			<string>file://localhost/Volumes/Data/src/desksms/script/ui</string>
+			<string>file://localhost/Volumes/Data/src/desksms/style</string>
+		</array>
+	</dict>
+	<key>com.macrabbit.Espresso.Publisher.DisclosureCollapsed</key>
+	<false/>
 	<key>com.macrabbit.Espresso.Workspace.Tabs</key>
 	<dict>
 		<key>Tabs</key>
@@ -38,5 +61,7 @@
 			</dict>
 		</array>
 	</dict>
+	<key>com.macrabbit.Espresso.WorkspaceTabs.DisclosureCollapsed</key>
+	<false/>
 </dict>
 </plist>
