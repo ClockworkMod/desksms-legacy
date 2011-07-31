@@ -263,7 +263,7 @@ var page = new function() {
     if (contact) {
       if (contact.photo) {
         //contactImage.attr('src', contact.photo);
-        page.loadContactPhoto(contactImage, contact);
+        page.loadContactPhoto(contactImage, conversation, contact);
       }
       displayName = contact.name;
       contactNameElement.text(contact.name).removeClass("hidden");
@@ -397,17 +397,33 @@ var page = new function() {
     page.cacheContact(conversation, contact, photoElement);
     
     if (contact.photo)
-      page.loadContactPhoto(photoElement, contact);
+      page.loadContactPhoto(photoElement, conversation, contact);
     $("#contact-name-" + conversation.id).text(contact.name).removeClass("hidden");
     $(".message-from-" + conversation.id).text(contact.name).removeClass("hidden");
   });
   
-  this.loadContactPhoto = function(photoElement, contact) {
+  this.loadContactPhoto = function(photoElement, conversation, contact) {
     if (!window.HTMLCanvasElement || !window.localStorage || contact.fromCache)
       photoElement.attr('src', contact.photo);
     else {
       photoElement[0].crossOrigin = '';
-      photoElement.attr('src', desksms.getCrossOriginImage(contact.photo));
+      
+      // if we are chrome, we can hook the image load to cache the contact image.
+      // if not, we have to use the proxy.
+      if (!page.isChrome()) {
+        jsonp(desksms.getCrossOriginImage(contact.photo), function(err, data) {
+          if (err)
+            return;
+          var photo = 'data:image/png;base64,' + data.data;
+          photoElement.attr('src', photo);
+          var key = 'contact-' + conversation.id;
+          var cachedContact = { name: contact.name, number: contact.number, numbersOnly: contact.numbersOnly, photo: photo };
+          localStorage[key] = JSON.stringify(cachedContact);
+        }, { alt: 'json'});
+      }
+      else {
+        photoElement.attr('src', desksms.getCrossOriginImage(contact.photo));
+      }
     }
   }
   
@@ -424,6 +440,10 @@ var page = new function() {
     return null;
   }
   
+  this.isChrome = function() {
+    return navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+  }
+  
   this.cacheContact = function(conversation, contact, photoElement) {
     if (!window.HTMLCanvasElement || !window.localStorage)
       return;
@@ -434,6 +454,11 @@ var page = new function() {
     localStorage[key] = JSON.stringify(cachedContact);
     // and let's hook the handler on this contact photo in case something gets loaded into it
     photoElement.unbind('load');
+    
+    // if we are chrome, we can hook the image load to cache the contact image.
+    // if not, we have to use the proxy.
+    if (!page.isChrome())
+      return;
     
     photoElement.load(function() {
       var canvas = document.createElement('canvas');
