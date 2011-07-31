@@ -416,28 +416,35 @@ var page = new function() {
       });
     })();
 
-    // figure out who we are
-    desksms.whoami(function(err, data) {
-      var loginButton = $('#desksms-login');
-      if (loginButton) {
-        if (!data.email) {
-          loginButton.attr('href', desksms.getLoginUrl());
-          return;
-        }
 
-        loginButton.attr('href', desksms.getLogoutUrl());
-        loginButton.text("Logout");
-        
-        var looper = function() {
-          setTimeout(looper, 30000);
-          page.refreshInbox();
-        };
-        looper();
-      }
-    });
-    
     var query = $.query.load(window.location.hash);
     var extension = query.get('extension');
+
+    // figure out who we are
+    var whoamiLooper = function() {
+      desksms.whoami(function(err, data) {
+        var loginButton = $('#desksms-login');
+        if (loginButton) {
+          if (err || !data.email) {
+            loginButton.attr('href', desksms.getLoginUrl());
+            if (extension == 'firefox')
+              setTimeout(whoamiLooper, 5000);
+            return;
+          }
+
+          loginButton.attr('href', desksms.getLogoutUrl());
+          loginButton.text("Logout");
+
+          var looper = function() {
+            setTimeout(looper, 30000);
+            page.refreshInbox();
+          };
+          looper();
+        }
+      });
+    };
+    whoamiLooper();
+    
     if (extension) {
       $('.link').attr('target', '_blank');
       $('.github-fork').hide();
