@@ -15,6 +15,12 @@ var contacts = new function() {
       if (c >= '0' && c <= '9')
         ret += c;
     });
+    // trim off any 0's at the start by converting to an int and back
+    try {
+      return String(parseInt(ret, 10));
+    }
+    catch (e) {
+    }
     return ret;
   }
   
