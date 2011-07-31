@@ -119,10 +119,11 @@ var page = new function() {
     contactCall.click(function(event) {
       var conversationElement = $(event.target).parents('.conversation-template');
       var number = $(conversationElement).find('.contact-number').text();
-      var displayName = contacts.getDisplayName(number);
+      var displayName = page.getDisplayName(number);
       
       page.confirmContactAction(conversationElement, sprintf("Call %s on your phone?", displayName), "yes", "no", function() {
         var contentStatus = $('#content-status');
+        contentStatus.show();
         contentStatus.text(sprintf('Dialing %s on your phone...', displayName));
         $('html, body').animate({
             scrollTop: 0
@@ -133,25 +134,41 @@ var page = new function() {
           }
 
           contentStatus.fadeOut(10000, function() {
-            contentStatus.show();
+            contentStatus.hide();
             contentStatus.text('DeskSMS');
           });
         });
       });
     });
     
-    var contactCall = $('.contact-delete');
-    contactCall.unbind('click');
-    contactCall.click(function(event) {
+    var contactDelete = $('.contact-delete');
+    contactDelete.unbind('click');
+    contactDelete.click(function(event) {
       var conversationElement = $(event.target).parents('.conversation-template');
       var number = $(conversationElement).find('.contact-number').text();
-      var displayName = contacts.getDisplayName(number);
+      var displayName = page.getDisplayName(number);
       
       page.confirmContactAction(conversationElement, sprintf("Delete conversation with %s?", displayName), "yes", "no", function() {
         desksms.deleteConversation(number);
+        conversationElement.remove();
       });
     });
-    
+  }
+  
+  this.getDisplayName = function(number) {
+    var conversation = desksms.findConversation(number);
+    var contact = conversation.contact;
+    var displayName;
+    if (!contact) {
+      contact = page.getCachedContact(conversation);
+    }
+    if (contact) {
+      displayName = contact.name; 
+    }
+    else {
+      displayName = contact.number;
+    }
+    return displayName;
   }
   
   this.addMessageToConversation = function(message, afterMessage, displayName, messageContainer, messageTemplate, messageElement) {
@@ -318,10 +335,11 @@ var page = new function() {
       if (lastRefresh == 0) {
         var contentStatus = $('#content-status');
         if (messages.length == 0) {
+          contentStatus.show();
           contentStatus.text('You are successfully logged in, but no messages were found! Please verify the DeskSMS Android application is installed and syncing SMS on your phone.')
         }
         else {
-          //contentStatus.hide();
+          contentStatus.hide();
           contentStatus.text('DeskSMS')
         }
         var convoCounter = {};

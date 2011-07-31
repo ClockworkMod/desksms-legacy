@@ -6,6 +6,7 @@ body {
     font-family: 'Carme', sans-serif;
     */
     font-size: 14px;
+    background-color: white;
 }
 
 a {
@@ -38,11 +39,6 @@ a:visited {
 .desksms-header a {
     font-weight: bold;
     color: #E27318;
-}
-
-.search-header {
-    padding: 9px;
-    background-color: #F1F1F1;
 }
 
 .send-message-container {
@@ -156,8 +152,11 @@ input.rounded {
 
 .content-status {
     padding: 20px;
-    background-color: #EEEEEE;
     font-size: 24px;
+}
+
+.grey-header {
+    background-color: #EEEEEE;
 }
 
 .contact-action-confirm-dialog {
@@ -170,4 +169,14 @@ input.rounded {
 }
 
 .contact-action-confirm-no {
+}
+
+.contact-search {
+    padding: 20px;
+}
+
+#contact-search {
+    width: 300px;
+    height: 30px;
+    font-size: 24px;
 }
