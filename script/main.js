@@ -380,7 +380,7 @@ var page = new function() {
         source: function(req, res) {
           if (contacts.list && contacts.list.length > 0) {
             var matches = filter(contacts.list, function(index, contact) {
-              if (contact.name.indexOf(req.term) > -1) {
+              if (contact.name.toLowerCase().indexOf(req.term.toLowerCase()) > -1) {
                 var entry;
                 if (contact.type)
                   entry = sprintf("%s %s - %s", contact.name, contact.number, contact.type);
