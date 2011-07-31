@@ -249,8 +249,21 @@ var page = new function() {
     var contactImage = $(conversationElement).find('.contact-image').attr('id', 'contact-image-' + conversation.id);
     var contactNameElement = $(conversationElement).find(".contact-name").attr('id', 'contact-name-' + conversation.id);
     if (contact) {
+      // save to cache if necessary
+      if (!contact.cached) {
+        contact.cached = true;
+        page.cacheContact(conversation, contact, contactImage);
+      }
+    }
+    else {
+      // try load from cache
+      contact = page.getCachedContact(conversation);
+    }
+
+    if (contact) {
       if (contact.photo) {
-        contactImage.attr('src', contact.photo);
+        //contactImage.attr('src', contact.photo);
+        page.loadContactPhoto(contactImage, contact);
       }
       displayName = contact.name;
       contactNameElement.text(contact.name).removeClass("hidden");
@@ -377,10 +390,65 @@ var page = new function() {
     var conversation = desksms.findConversation(contact.number);
     if (conversation == null)
       return;
+
+    // cache the contact
+    var key = 'contact-image-' + conversation.id;
+    var photoElement = $("#contact-image-" + conversation.id);
+    page.cacheContact(conversation, contact, photoElement);
     
     if (contact.photo)
-      $("#contact-image-" + conversation.id).attr('src', contact.photo);
+      page.loadContactPhoto(photoElement, contact);
     $("#contact-name-" + conversation.id).text(contact.name).removeClass("hidden");
     $(".message-from-" + conversation.id).text(contact.name).removeClass("hidden");
   });
+  
+  this.loadContactPhoto = function(photoElement, contact) {
+    if (!window.HTMLCanvasElement || !window.localStorage || contact.fromCache)
+      photoElement.attr('src', contact.photo);
+    else {
+      photoElement[0].crossOrigin = '';
+      photoElement.attr('src', desksms.getCrossOriginImage(contact.photo));
+    }
+  }
+  
+  this.getCachedContact = function(conversation) {
+    var key = 'contact-' + conversation.id;
+    try {
+      var ret = JSON.parse(localStorage[key]);
+      ret.fromCache = true;
+      console.log('using cached contact');
+      return ret;
+    }
+    catch(e) {
+    }
+    return null;
+  }
+  
+  this.cacheContact = function(conversation, contact, photoElement) {
+    if (!window.HTMLCanvasElement || !window.localStorage)
+      return;
+    
+    var key = 'contact-' + conversation.id;
+    console.log('cached contact ' + conversation.number);
+    var cachedContact = { name: contact.name, number: contact.number, numbersOnly: contact.numbersOnly };
+    localStorage[key] = JSON.stringify(cachedContact);
+    // and let's hook the handler on this contact photo in case something gets loaded into it
+    photoElement.unbind('load');
+    
+    photoElement.load(function() {
+      var canvas = document.createElement('canvas');
+      canvas.setAttribute('width', photoElement.width());
+      canvas.setAttribute('height', photoElement.height());
+      
+      //canvas.width = photoElement.width;
+      //canvas.height = photoElement.height;
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(this, 0, 0);
+      var data = canvas.toDataURL();
+      //console.log(data);
+      cachedContact.photo = data;
+      localStorage[key] = JSON.stringify(cachedContact);
+      console.log('cached contact photo ' + conversation.number);
+    });
+  }
 }

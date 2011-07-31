@@ -1,9 +1,5 @@
 var googleContacts = new function() {
   this.getAuthorizationUrl = function() {
-    /*
-    var url = sprintf('https://www.google.com/accounts/AuthSubRequest?next=%s&scope=%s&session=1&secure=0',
-                              encodeURIComponent(window.location.href.substring(0, window.location.href.length - window.location.search.length) + "#return=google"), encodeURIComponent('https://www.google.com/m8/feeds/'));
-    */
     var url = 'https://accounts.google.com/o/oauth2/auth?client_id=%s&redirect_uri=%s&scope=%s&response_type=token';
     url = sprintf(url, '131828589063.apps.googleusercontent.com', encodeURIComponent(window.location.protocol + '//' + window.location.host + window.location.pathname), encodeURIComponent('https://www.google.com/m8/feeds/'));
     return url;

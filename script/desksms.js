@@ -25,9 +25,13 @@ var desksms = new function() {
   this.LOGIN_URL = this.API_URL + "/user/login?continue=%s";
   this.LOGOUT_URL = this.API_URL + "/user/logout?continue=%s";
   this.WHOAMI_URL = this.API_URL + "/user/whoami";
-  this.AUTHSUB_URL = this.API_URL + "/authsub";
+  this.PROXY_URL = this.API_URL + "/proxy?proxied=%s";
   
   this.conversations = {};
+  
+  this.getCrossOriginImage = function(image) {
+    return sprintf(this.PROXY_URL, encodeURIComponent(image))
+  }
   
   this.getLoginUrl = function() {
     return sprintf(this.LOGIN_URL, encodeURIComponent(window.location.href));
