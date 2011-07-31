@@ -403,14 +403,16 @@ var page = new function() {
   });
   
   this.loadContactPhoto = function(photoElement, conversation, contact) {
-    if (!window.HTMLCanvasElement || !window.localStorage || contact.fromCache)
+    // if we don't have local cache, or this contact is from cache
+    // just use the explicit url
+    if (!window.localStorage || contact.fromCache) {
       photoElement.attr('src', contact.photo);
+    }
     else {
-      photoElement[0].crossOrigin = '';
-      
       // if we are chrome, we can hook the image load to cache the contact image.
       // if not, we have to use the proxy.
       if (!page.isChrome()) {
+        // use the proxy service to get a base64 encoded image in a jsonp payload
         jsonp(desksms.getCrossOriginImage(contact.photo), function(err, data) {
           if (err)
             return;
@@ -422,6 +424,9 @@ var page = new function() {
         }, { alt: 'json'});
       }
       else {
+        // do a cross origin request  on chrome.
+        // chrome canvas and image can handle cross origin requests.
+        photoElement[0].crossOrigin = '';
         photoElement.attr('src', desksms.getCrossOriginImage(contact.photo));
       }
     }
