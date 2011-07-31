@@ -402,7 +402,7 @@ var page = new function() {
           setTimeout(function() {
             input.val(null);
           }, 200);
-          
+
           var conversation = desksms.startConversation(contact.number);
           var conversationElement = $('#conversation-' + conversation.id);
           if (!conversationElement || conversationElement.length == 0) {
@@ -411,7 +411,7 @@ var page = new function() {
           }
           conversationElement = $('#conversation-' + conversation.id);
           var contactText = $(conversationElement).find('.contact-text');
-          contactText.trigger('click');          
+          contactText.trigger('click');
         }
       });
     })();
