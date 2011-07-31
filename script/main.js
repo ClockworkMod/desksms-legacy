@@ -257,9 +257,12 @@ var page = new function() {
       messages.push(conversation.messages[value]);
     });
     var lastMessage = messages[messages.length - 1];
+    var lastMessageDate;
+    if (lastMessage)
+      lastMessageDate = page.longAgo(lastMessage.date);
     
     $(conversationElement).find('.contact-number').text(conversation.number);
-    $(conversationElement).find('.contact-last-message-date').text(page.longAgo(lastMessage.date));
+    $(conversationElement).find('.contact-last-message-date').text(lastMessageDate);
     
     var contact = conversation.contact;
     var displayName = conversation.number;
@@ -314,6 +317,7 @@ var page = new function() {
       }
       if (data.data.length == 0)
         return;
+
       var conversations = {};
       $.each(data.data, function(index, message) {
         conversations[message.conversation.id] = message.conversation;
@@ -369,6 +373,49 @@ var page = new function() {
   }
 
   $(document).ready(function() {
+    (function() {
+      var input = $('#contact-search');
+      input.autocomplete({
+        minLength: 1,
+        source: function(req, res) {
+          if (contacts.list && contacts.list.length > 0) {
+            var matches = filter(contacts.list, function(index, contact) {
+              if (contact.name.indexOf(req.term) > -1) {
+                var entry;
+                if (contact.type)
+                  entry = sprintf("%s %s - %s", contact.name, contact.number, contact.type);
+                else
+                  entry = sprintf("%s %s", contact.name, contact.number);
+                var searchResult = {
+                  value: entry,
+                  label: entry,
+                  contact: contact
+                };
+                return searchResult;
+              }
+            });
+            res(matches);
+          }
+        },
+        select: function(event, ui) {
+          var contact = ui.item.contact;
+          setTimeout(function() {
+            input.val(null);
+          }, 200);
+          
+          var conversation = desksms.startConversation(contact.number);
+          var conversationElement = $('#conversation-' + conversation.id);
+          if (!conversationElement || conversationElement.length == 0) {
+            page.addConversationToTop(conversation);
+            page.setClickHandlers();
+          }
+          conversationElement = $('#conversation-' + conversation.id);
+          var contactText = $(conversationElement).find('.contact-text');
+          contactText.trigger('click');          
+        }
+      });
+    })();
+
     // figure out who we are
     desksms.whoami(function(err, data) {
       var loginButton = $('#desksms-login');
@@ -422,10 +469,6 @@ var page = new function() {
     $("#contact-name-" + conversation.id).text(contact.name).removeClass("hidden");
     $(".message-from-" + conversation.id).text(contact.name).removeClass("hidden");
   });
-  
-  this.setAutoComplete = function() {
-    
-  }
   
   this.loadContactPhoto = function(photoElement, conversation, contact) {
     // if we don't have local cache, or this contact is from cache

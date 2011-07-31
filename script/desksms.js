@@ -4,6 +4,7 @@ function Conversation(number) {
   this.id = this.numbersOnly;
   this.messages = {};
   this.latestMessageDate = 0;
+  this.contact = contacts.findNumber(number);
 }
 
 Conversation.prototype.addMessage = function(message) {
@@ -45,6 +46,15 @@ var desksms = new function() {
     jsonp(this.WHOAMI_URL, cb);
   }
   
+  this.startConversation = function(number) {
+    var convo = this.findConversation(number);
+    if (convo)
+      return convo;
+    convo = new Conversation(number);
+    this.conversations[convo.numbersOnly] = convo;
+    return convo;
+  }
+  
   this.findConversation = function(number) {
     return contacts.findNumber(number, desksms.conversations);
   }
@@ -63,13 +73,13 @@ var desksms = new function() {
           return;
         // bucket these into conversations
         $.each(data.data, function(index, message) {
-          var conversation = desksms.findConversation(message.number);
-          if (conversation == null) {
-            var n = contacts.numbersOnly(message.number);
-            //conversation = desksms.conversations[n] = {messages: [], numbersOnly: n, latestMessageDate: message.date, number: message.number, id: Crypto.MD5(message.number) };
-            conversation = desksms.conversations[n] = new Conversation(message.number);
-            conversation.contact = contacts.findNumber(conversation.number);
-          }
+          var conversation = desksms.startConversation(message.number);
+          // if (conversation == null) {
+          //   var n = contacts.numbersOnly(message.number);
+          //   //conversation = desksms.conversations[n] = {messages: [], numbersOnly: n, latestMessageDate: message.date, number: message.number, id: Crypto.MD5(message.number) };
+          //   conversation = desksms.conversations[n] = new Conversation(message.number);
+          //   conversation.contact = contacts.findNumber(conversation.number);
+          // }
 
           conversation.addMessage(message);
         });
