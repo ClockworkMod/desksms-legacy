@@ -439,16 +439,18 @@ var page = new function() {
       var canvas = document.createElement('canvas');
       canvas.setAttribute('width', photoElement.width());
       canvas.setAttribute('height', photoElement.height());
-      
-      //canvas.width = photoElement.width;
-      //canvas.height = photoElement.height;
       var ctx = canvas.getContext('2d');
       ctx.drawImage(this, 0, 0);
-      var data = canvas.toDataURL();
-      //console.log(data);
-      cachedContact.photo = data;
-      localStorage[key] = JSON.stringify(cachedContact);
-      console.log('cached contact photo ' + conversation.number);
+      try {
+        // firefox currently does not support cross origin
+        // images, so this will throw. sadface.
+        var data = canvas.toDataURL();
+        cachedContact.photo = data;
+        localStorage[key] = JSON.stringify(cachedContact);
+        console.log('cached contact photo ' + conversation.number);
+      }
+      catch (e) {
+      }
     });
   }
 }
