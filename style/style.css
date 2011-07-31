@@ -180,3 +180,12 @@ input.rounded {
     height: 30px;
     font-size: 24px;
 }
+
+.like-buttons {
+    float: left;
+    margin: 4px;
+}
+
+.like-button {
+    margin: 2px;
+}
