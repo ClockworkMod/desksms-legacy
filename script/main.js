@@ -426,7 +426,7 @@ var page = new function() {
         }
 
         loginButton.attr('href', desksms.getLogoutUrl());
-        loginButton.text("Logout: " + data.email);
+        loginButton.text("Logout");
         
         var looper = function() {
           setTimeout(looper, 30000);
