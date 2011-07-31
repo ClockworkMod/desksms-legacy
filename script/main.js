@@ -257,7 +257,7 @@ var page = new function() {
       messages.push(conversation.messages[value]);
     });
     var lastMessage = messages[messages.length - 1];
-    var lastMessageDate;
+    var lastMessageDate = '';
     if (lastMessage)
       lastMessageDate = page.longAgo(lastMessage.date);
     
