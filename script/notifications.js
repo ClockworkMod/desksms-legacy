@@ -1,11 +1,29 @@
 var notifications = new function() {
   this.showNotification = function(icon, title, message) {
+    var query = $.query.load(window.location.hash);
+    var extension = query.get('extension');
+
     if (window.webkitNotifications) {
       console.log(webkitNotifications.checkPermission());
       if (webkitNotifications.checkPermission() != 0)
         return;
       var notification = webkitNotifications.createNotification(icon, title, message);
       notification.show();
+    }
+    else if (extension == 'firefox') {
+      // firefox only shows badges
+      var curCount = 0;
+      var firefoxExtensionData = $('#firefox-extension-data');
+      try {
+        curCount = parseInt(firefoxExtensionData.text());
+        if (isNaN(curCount))
+          curCount = 0;
+      }
+      catch (e) {
+      }
+      curCount++;
+      
+      firefoxExtensionData.text(curCount);
     }
   }
   

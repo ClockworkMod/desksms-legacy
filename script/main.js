@@ -551,16 +551,10 @@ var page = new function() {
       canvas.setAttribute('height', photoElement.height());
       var ctx = canvas.getContext('2d');
       ctx.drawImage(this, 0, 0);
-      try {
-        // firefox currently does not support cross origin
-        // images, so this will throw. sadface.
-        var data = canvas.toDataURL();
-        cachedContact.photo = data;
-        localStorage[key] = JSON.stringify(cachedContact);
-        console.log('cached contact photo ' + conversation.number);
-      }
-      catch (e) {
-      }
+      var data = canvas.toDataURL();
+      cachedContact.photo = data;
+      localStorage[key] = JSON.stringify(cachedContact);
+      console.log('cached contact photo ' + conversation.number);
     });
   }
 }

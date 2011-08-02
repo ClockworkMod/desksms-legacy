@@ -14,7 +14,7 @@ var googleContacts = new function() {
       if (!token)
         return;
       
-      jsonp('https://www.google.com/m8/feeds/contacts/default/full?max-results=10000&alt=json', function(err, data) {
+      var jqXHR = jsonp('https://www.google.com/m8/feeds/contacts/default/full?max-results=10000&alt=json', function(err, data) {
         if (err) {
           console.log(err);
           return;
