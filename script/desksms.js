@@ -27,6 +27,7 @@ var desksms = new function() {
   this.LOGOUT_URL = this.API_URL + "/user/logout?continue=%s";
   this.WHOAMI_URL = this.API_URL + "/user/whoami";
   this.PROXY_URL = this.API_URL + "/proxy?proxied=%s";
+  this.BADGE_URL = this.USER_URL + "/badge";
   
   this.conversations = {};
   
@@ -101,13 +102,15 @@ var desksms = new function() {
     jsonp(this.OUTBOX_URL, cb, args);
   }
   
-  contacts.onNewContact(function(contact) {
-    var conversation = desksms.findConversation(contact.number);
-    if (conversation == null)
-      return;
-    
-    conversation.contact = contact;
-  });
+  if (window.contacts) {
+    contacts.onNewContact(function(contact) {
+      var conversation = desksms.findConversation(contact.number);
+      if (conversation == null)
+        return;
+
+      conversation.contact = contact;
+    });
+  }
   
   this.dialNumber = function(number, cb) {
     jsonp(this.DIAL_URL, cb, { number: number });
@@ -126,5 +129,19 @@ var desksms = new function() {
     $.each(numbers, function(index, messageNumber) {
       jsonp(desksms.SMS_URL, null, { operation: "DELETE", number: messageNumber });
     });
+  }
+
+  this.lastBadgeDate = null;
+  this.badge = function(cb) {
+    var data;
+    if (desksms.lastBadgeDate) {
+      data = { after_date: desksms.lastBadgeDate };
+    }
+    jsonp(desksms.BADGE_URL, function(err, data) {
+      if (!err && (data.badge || !desksms.lastBadgeDate)) {
+        desksms.lastBadgeDate = data.date;
+      }
+      cb(err, data);
+    }, data);
   }
 };
