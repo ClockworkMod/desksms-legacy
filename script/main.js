@@ -386,7 +386,7 @@ var page = new function() {
 
       page.setClickHandlers();
       
-      this.lastRefresh = Math.max(this.lastRefresh, lastRefresh);
+      page.lastRefresh = Math.max(page.lastRefresh, lastRefresh);
     });
   }
 
