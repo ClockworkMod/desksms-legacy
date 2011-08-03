@@ -43,8 +43,16 @@ var desksms = new function() {
     return sprintf(this.LOGOUT_URL, encodeURIComponent(window.location.href));
   }
   
+  this.registrationId = null;
+  this.email = null;
   this.whoami = function(cb) {
-    jsonp(this.WHOAMI_URL, cb);
+    jsonp(this.WHOAMI_URL, function(err, data) {
+      if (data) {
+        desksms.email = data.email;
+        desksms.registrationId = data.registration_id;
+      }
+      cb(err, data);
+    });
   }
   
   this.startConversation = function(number) {
@@ -67,20 +75,38 @@ var desksms = new function() {
       number: null
     }
   */
+  this.parseSms = function(data) {
+    if (data) {
+      if (data.data.length == 0)
+        return;
+      // bucket these into conversations
+      $.each(data.data, function(index, message) {
+        var conversation = desksms.startConversation(message.number);
+        conversation.addMessage(message);
+      });
+    }
+  }
+  
   this.getSms = function(options, cb) {
     jsonp(this.SMS_URL, function(err, data) {
-      if (data) {
-        if (data.data.length == 0)
-          return;
-        // bucket these into conversations
-        $.each(data.data, function(index, message) {
-          var conversation = desksms.startConversation(message.number);
-          conversation.addMessage(message);
-        });
-      }
-      
+      desksms.parseSms(data);
       cb(err, data);
     }, options);
+  }
+  
+  this.push = function(cb) {
+    $.get('https://desksms.deployfu.com/wait/' + encodeURIComponent(desksms.registrationId) + "?nonce=" + Date.now(), function(data) {
+      desksms.push(cb);
+      cb(null, data);
+    })
+    .error(function(err) {
+      cb(err);
+      setTimeout(function() {
+        // try setting up a push connection again in 30 seconds
+        desksms.push(cb);
+      }, 30000);
+    }).complete(function() {
+    });
   }
   
   this.getOutbox = function(options, cb) {

@@ -1,4 +1,5 @@
 var jsonp = function(url, cb, data) {
+  console.log(url);
   var jqXHR = $.get(url, data, function(data) {
     if (cb)
       cb(null, data);
