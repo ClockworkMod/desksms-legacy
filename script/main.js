@@ -101,9 +101,8 @@ var page = new function() {
           var conversation = desksms.findConversation(number);
           var pendingMessage = {};
           pendingMessage.message = contents;
-          pendingMessage.type = 'outgoing';
+          pendingMessage.type = 'pending';
           pendingMessage.date = date;
-          pendingMessage.pending = true;
           conversation.addMessage(pendingMessage);
           page.addMessageToConversation(pendingMessage);
         });
@@ -201,7 +200,7 @@ var page = new function() {
     else {
       from.text('Me');
     }
-    if (message.pending == true)
+    if (message.type == 'pending')
       $(messageElement).find('.message-pending').removeClass('hidden');
     else
       $(messageElement).find('.message-pending').addClass('hidden');
