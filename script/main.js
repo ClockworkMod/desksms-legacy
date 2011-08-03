@@ -317,11 +317,12 @@ var page = new function() {
   
   this.refreshInbox = function() {
     var lastRefresh = this.lastRefresh;
-    if (this.lastRefresh == 0)
-      this.lastRefresh = new Date().getTime() - 3 * 24 * 60 * 60 * 1000;
+    var startRefresh = this.lastRefresh;
+    if (lastRefresh == 0)
+      lastRefresh = new Date().getTime() - 3 * 24 * 60 * 60 * 1000;
     
-    console.log(this.lastRefresh);
-    desksms.getSms({ after_date: this.lastRefresh }, function(err, data) {
+    console.log(lastRefresh);
+    desksms.getSms({ after_date: lastRefresh }, function(err, data) {
       if (err) {
         console.log(err);
         return;
@@ -336,7 +337,7 @@ var page = new function() {
       var conversations = {};
       $.each(data.data, function(index, message) {
         conversations[message.conversation.id] = message.conversation;
-        page.lastRefresh = Math.max(page.lastRefresh, message.date);
+        lastRefresh = Math.max(lastRefresh, message.date);
       });
 
       conversations = sorty(keys(conversations), function(key) {
@@ -351,7 +352,7 @@ var page = new function() {
       });
 
       var messages = data.data;
-      if (lastRefresh == 0) {
+      if (startRefresh == 0) {
         var contentStatus = $('#content-status');
         if (messages.length == 0) {
           contentStatus.show();
@@ -384,6 +385,8 @@ var page = new function() {
       });
 
       page.setClickHandlers();
+      
+      this.lastRefresh = Math.max(this.lastRefresh, lastRefresh);
     });
   }
 
