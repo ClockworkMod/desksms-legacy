@@ -95,7 +95,7 @@ var desksms = new function() {
   }
   
   this.push = function(cb) {
-    $.get('http://desksms.deployfu.com:9980/wait/' + encodeURIComponent(desksms.registrationId) + "?nonce=" + Date.now(), function(data) {
+    $.get('http://desksmspush.deployfu.com:9980/wait/' + encodeURIComponent(desksms.registrationId) + "?nonce=" + Date.now(), function(data) {
       desksms.push(cb);
       cb(null, data);
     })
