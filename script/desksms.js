@@ -100,11 +100,11 @@ var desksms = new function() {
       cb(null, data);
     })
     .error(function(err) {
-      cb(err);
       setTimeout(function() {
         // try setting up a push connection again in 30 seconds
         desksms.push(cb);
       }, 30000);
+      cb(err);
     }).complete(function() {
     });
   }
