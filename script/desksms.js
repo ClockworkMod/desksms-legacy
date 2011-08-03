@@ -109,8 +109,7 @@ var desksms = new function() {
     jsonp(this.DIAL_URL, cb, { number: number });
   }
   
-  this.deleteConversation = function(number) {
-    var conversation = this.findConversation(number);
+  this.deleteConversation = function(conversation) {
     if (conversation == null)
       return;
     var numbers = {};

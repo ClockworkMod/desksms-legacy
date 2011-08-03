@@ -91,7 +91,9 @@ var page = new function() {
         var contents = input.val();
         if (contents == "")
           return;
-        var number = $(conversationElement).find('.contact-number').text();
+        var conversationId = $(conversationElement).find('#conversation-id').text();
+        var conversation = desksms.conversations[conversationId];
+        var number = conversation.number;
         desksms.sendSms(number, contents, function(err, data) {
           if (err) {
             console.log(err);
@@ -117,8 +119,10 @@ var page = new function() {
     
     contactCall.click(function(event) {
       var conversationElement = $(event.target).parents('.conversation-template');
-      var number = $(conversationElement).find('.contact-number').text();
-      var displayName = page.getDisplayName(number);
+      var conversationId = $(conversationElement).find('#conversation-id').text();
+      var conversation = desksms.conversations[conversationId];
+      var number = conversation.number;
+      var displayName = page.getDisplayName(conversation);
       
       page.confirmContactAction(conversationElement, sprintf("Call %s on your phone?", displayName), "yes", "no", function() {
         var contentStatus = $('#content-status');
@@ -145,7 +149,10 @@ var page = new function() {
     contactDelete.click(function(event) {
       var conversationElement = $(event.target).parents('.conversation-template');
       var number = $(conversationElement).find('.contact-number').text();
-      var displayName = page.getDisplayName(number);
+      var conversationId = $(conversationElement).find('#conversation-id').text();
+      var conversation = desksms.conversations[conversationId];
+      var number = conversation.number;
+      var displayName = page.getDisplayName(conversation);
       
       page.confirmContactAction(conversationElement, sprintf("Delete conversation with %s?", displayName), "yes", "no", function() {
         desksms.deleteConversation(number);
@@ -154,8 +161,7 @@ var page = new function() {
     });
   }
   
-  this.getDisplayName = function(number) {
-    var conversation = desksms.findConversation(number);
+  this.getDisplayName = function(conversation) {
     var contact = conversation.contact;
     var displayName;
     if (!contact) {
@@ -211,8 +217,8 @@ var page = new function() {
       if (messageContainer == null)
         messageContainer = $('#conversation-' + conversation.id).find('#contact-messages-internal');
         if (messageContainer == null || messageContainer.length == 0) {
-          page.addConversation(message.conversation);
-          messageContainer = $('#conversation-' + conversation.id).find('#contact-messages-internal');
+          console.log('conversation not found.');
+          return;
         }
       
       if (afterMessage == null)
@@ -262,6 +268,7 @@ var page = new function() {
     
     $(conversationElement).find('.contact-number').text(conversation.number);
     $(conversationElement).find('.contact-last-message-date').text(lastMessageDate);
+    $(conversationElement).find('#conversation-id').text(conversation.id);
     
     var contact = conversation.contact;
     var displayName = conversation.number;
