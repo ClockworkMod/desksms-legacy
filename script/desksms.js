@@ -52,7 +52,7 @@ var desksms = new function() {
     if (convo)
       return convo;
     convo = new Conversation(number);
-    this.conversations[convo.numbersOnly] = convo;
+    this.conversations[convo.id] = convo;
     return convo;
   }
   
@@ -75,13 +75,6 @@ var desksms = new function() {
         // bucket these into conversations
         $.each(data.data, function(index, message) {
           var conversation = desksms.startConversation(message.number);
-          // if (conversation == null) {
-          //   var n = contacts.numbersOnly(message.number);
-          //   //conversation = desksms.conversations[n] = {messages: [], numbersOnly: n, latestMessageDate: message.date, number: message.number, id: Crypto.MD5(message.number) };
-          //   conversation = desksms.conversations[n] = new Conversation(message.number);
-          //   conversation.contact = contacts.findNumber(conversation.number);
-          // }
-
           conversation.addMessage(message);
         });
       }

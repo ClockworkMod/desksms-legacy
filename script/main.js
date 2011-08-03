@@ -331,7 +331,7 @@ var page = new function() {
       });
       
       $.each(conversations, function(index, conversation) {
-        page.addConversationToTop(desksms.findConversation(conversation));
+        page.addConversationToTop(desksms.conversations[conversation]);
       });
 
       var messages = data.data;
