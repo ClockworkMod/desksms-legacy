@@ -67,6 +67,8 @@ var page = new function() {
     
     contactText.click(function(event) {
       var conversationElement = $(event.target).parents('.conversation-template');
+      var characterCountElement = $(conversationElement).find('.contact-text-character-count');
+      characterCountElement.text("160 characters remaining (1)");
 
       var footer = $(event.target).parents('.message-panel-footer');
       var hidden = footer.find('.contact-text-container');
@@ -86,6 +88,13 @@ var page = new function() {
       });
       
       input.keypress(function(event) {
+        var inputString = input.val();
+        var len = inputString.length;
+        var pages = len / 160 + 1;
+        var charactersLeft = 160 - (len % 160);
+        var text = sprintf("%d characters remaining (%d)", charactersLeft, pages);
+        characterCountElement.text(text);
+        
         if (event.which != 13)
           return;
         var contents = input.val();

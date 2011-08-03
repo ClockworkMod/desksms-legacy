@@ -190,3 +190,8 @@ input.rounded {
 .like-button {
     margin: 2px;
 }
+
+.contact-text-character-count {
+    padding: 6px;
+    font-weight: bold;
+}
