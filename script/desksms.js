@@ -1,7 +1,7 @@
 function Conversation(number) {
   this.number = number;
   this.numbersOnly = contacts.numbersOnly(number);
-  this.id = this.numbersOnly;
+  this.id = Crypto.MD5(this.number);
   this.messages = {};
   this.latestMessageDate = 0;
   this.contact = contacts.findNumber(number);
