@@ -315,80 +315,75 @@ var page = new function() {
   
   this.lastRefresh = 0;
   
-  this.handleInboxData = function(err, data) {
-    var lastRefresh = page.lastRefresh;
-    if (err) {
-      console.log(err);
-      return;
-    }
-    if (data.data == null) {
-      console.log('no data returned from sms call');
-      return;
-    }
-    if (data.data.length == 0)
-      return;
-
-    var conversations = {};
-    $.each(data.data, function(index, message) {
-      conversations[message.conversation.id] = message.conversation;
-      page.lastRefresh = Math.max(page.lastRefresh, message.date);
-    });
-    
-    conversations = sorty(keys(conversations), function(key) {
-      return conversations[key].latestMessageDate;
-    });
-    conversations = select(conversations, function(index, value) {
-      return value;
-    });
-    
-    $.each(conversations, function(index, conversation) {
-      page.addConversationToTop(desksms.conversations[conversation]);
-    });
-
-    var messages = data.data;
-    if (lastRefresh == 0) {
-      var contentStatus = $('#content-status');
-      if (messages.length == 0) {
-        contentStatus.show();
-        contentStatus.text('You are successfully logged in, but no messages were found! Please verify the DeskSMS Android application is installed and syncing SMS on your phone.')
-      }
-      else {
-        contentStatus.hide();
-        contentStatus.text('DeskSMS')
-      }
-      var convoCounter = {};
-      messages.reverse();
-      messages = filter(messages, function(index, message) {
-        if (!convoCounter[message.conversation.id])
-          convoCounter[message.conversation.id] = 0;
-        if (++convoCounter[message.conversation.id] >= 10)
-          return null;
-        return message;
-      });
-      messages.reverse();
-    }
-    else {
-      $.each(messages, function(index, message) {
-        if (message.type == 'incoming')
-          notifications.showMessageNotification(message);
-      });
-    }
-    
-    $.each(messages, function(index, message) {
-      page.addMessageToConversation(message);
-    });
-    
-    page.setClickHandlers();
-  }
-  
   this.refreshInbox = function() {
     var lastRefresh = this.lastRefresh;
-    if (lastRefresh == 0)
-      lastRefresh = new Date().getTime() - 3 * 24 * 60 * 60 * 1000;
+    if (this.lastRefresh == 0)
+      this.lastRefresh = new Date().getTime() - 3 * 24 * 60 * 60 * 1000;
     
-    console.log(lastRefresh);
-    desksms.getSms({ after_date: lastRefresh }, function(err, data) {
-      page.handleInboxData(err, data);
+    console.log(this.lastRefresh);
+    desksms.getSms({ after_date: this.lastRefresh }, function(err, data) {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      if (data.data == null) {
+        console.log('no data returned from sms call');
+        return;
+      }
+      if (data.data.length == 0)
+        return;
+
+      var conversations = {};
+      $.each(data.data, function(index, message) {
+        conversations[message.conversation.id] = message.conversation;
+        page.lastRefresh = Math.max(page.lastRefresh, message.date);
+      });
+
+      conversations = sorty(keys(conversations), function(key) {
+        return conversations[key].latestMessageDate;
+      });
+      conversations = select(conversations, function(index, value) {
+        return value;
+      });
+
+      $.each(conversations, function(index, conversation) {
+        page.addConversationToTop(desksms.conversations[conversation]);
+      });
+
+      var messages = data.data;
+      if (lastRefresh == 0) {
+        var contentStatus = $('#content-status');
+        if (messages.length == 0) {
+          contentStatus.show();
+          contentStatus.text('You are successfully logged in, but no messages were found! Please verify the DeskSMS Android application is installed and syncing SMS on your phone.')
+        }
+        else {
+          contentStatus.hide();
+          contentStatus.text('DeskSMS')
+        }
+        var convoCounter = {};
+        messages.reverse();
+        messages = filter(messages, function(index, message) {
+          if (!convoCounter[message.conversation.id])
+            convoCounter[message.conversation.id] = 0;
+          if (++convoCounter[message.conversation.id] >= 10)
+            return null;
+          return message;
+        });
+        messages.reverse();
+      }
+      else {
+        $.each(messages, function(index, message) {
+          if (message.type == 'incoming')
+            notifications.showMessageNotification(message);
+        });
+      }
+
+      $.each(messages, function(index, message) {
+        page.addMessageToConversation(message);
+      });
+
+      page.setClickHandlers();
     });
   }
 
