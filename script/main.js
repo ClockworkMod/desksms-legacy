@@ -180,7 +180,7 @@ var page = new function() {
       displayName = contact.name; 
     }
     else {
-      displayName = contact.number;
+      displayName = conversation.number;
     }
     return displayName;
   }
