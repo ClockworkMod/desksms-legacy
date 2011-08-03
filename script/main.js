@@ -164,7 +164,7 @@ var page = new function() {
       var displayName = page.getDisplayName(conversation);
       
       page.confirmContactAction(conversationElement, sprintf("Delete conversation with %s?", displayName), "yes", "no", function() {
-        desksms.deleteConversation(number);
+        desksms.deleteConversation(conversation);
         conversationElement.remove();
       });
     });
