@@ -1,9 +1,9 @@
 var notifications = new function() {
-  this.showNotification = function(icon, title, message) {
-    var query = $.query.load(window.location.hash);
-    var extension = query.get('extension');
+  var query = null;
+  var extension = null;
 
-    if (window.webkitNotifications) {
+  this.showNotification = function(icon, title, message) {
+    if (window.webkitNotifications && !extension) {
       console.log(webkitNotifications.checkPermission());
       if (webkitNotifications.checkPermission() != 0)
         return;
@@ -29,7 +29,8 @@ var notifications = new function() {
     var contact = message.conversation.contact;
     if (contact) {
       displayName = contact.name;
-      icon = contact.photo;
+      if (contact.photo)
+        icon = contact.photo;
     }
     
     var title = sprintf("SMS Received: %s", displayName);
@@ -37,7 +38,10 @@ var notifications = new function() {
   }
   
   $(document).ready(function() {
-    if (window.webkitNotifications) {
+    query = $.query.load(window.location.hash);
+    extension = query.get('extension');
+
+    if (window.webkitNotifications && !extension) {
       if (webkitNotifications.checkPermission() != 0)
         $('.enable-chrome-notifications').removeClass('hidden');
     }

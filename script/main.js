@@ -577,6 +577,12 @@ var page = new function() {
     var key = 'contact-' + conversation.id;
     console.log('cached contact ' + conversation.number);
     var cachedContact = { name: contact.name, number: contact.number, numbersOnly: contact.numbersOnly };
+    // preserve the existing contact photo if we need it.
+    if (!cachedContact.photo) {
+      var existingCachedContact = page.getCachedContact(conversation);
+      if (existingCachedContact)
+        cachedContact.photo = existingCachedContact.photo;
+    }
     localStorage[key] = JSON.stringify(cachedContact);
     // and let's hook the handler on this contact photo in case something gets loaded into it
     photoElement.unbind('load');
