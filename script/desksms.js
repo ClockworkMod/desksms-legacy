@@ -110,14 +110,13 @@ var desksms = new function() {
       return;
     }
 
-    var hdr = $.get('http://desksmspush.deployfu.com:9980/wait/' + encodeURIComponent(desksms.registrationId) + "?nonce=" + Date.now(), function(data) {
+    $.get('http://desksmspush.deployfu.com:9980/wait/' + encodeURIComponent(desksms.registrationId) + "?nonce=" + new Date().getTime(), function(data) {
       desksms.push(cb);
       cb(null, data);
     })
     .error(function(err) {
       scheduleNextPushConnection();
       cb(err);
-    }).complete(function() {
     });
   }
 
