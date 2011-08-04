@@ -95,20 +95,30 @@ var desksms = new function() {
   }
   
   this.push = function(cb) {
-    $.get('http://desksmspush.deployfu.com:9980/wait/' + encodeURIComponent(desksms.registrationId) + "?nonce=" + Date.now(), function(data) {
-      desksms.push(cb);
-      cb(null, data);
-    })
-    .error(function(err) {
+    var scheduleNextPushConnection = function() {
       setTimeout(function() {
         // try setting up a push connection again in 30 seconds
         desksms.push(cb);
       }, 30000);
+    }
+
+    if (!desksms.registrationId) {
+      cb('no registration');
+      scheduleNextPushConnection();
+      return;
+    }
+
+    var hdr = $.get('http://desksmspush.deployfu.com:9980/wait/' + encodeURIComponent(desksms.registrationId) + "?nonce=" + Date.now(), function(data) {
+      desksms.push(cb);
+      cb(null, data);
+    })
+    .error(function(err) {
+      scheduleNextPushConnection();
       cb(err);
     }).complete(function() {
     });
   }
-  
+
   this.getOutbox = function(options, cb) {
     jsonp(this.OUTBOX_URL, cb, options);
   }

@@ -364,6 +364,7 @@ var page = new function() {
         }
         var convoCounter = {};
         messages.reverse();
+
         messages = filter(messages, function(index, message) {
           if (!convoCounter[message.conversation.id])
             convoCounter[message.conversation.id] = 0;
@@ -438,7 +439,7 @@ var page = new function() {
     var query = $.query.load(window.location.hash);
     var extension = query.get('extension');
 
-    // figure out who we are
+    // figure out who we are and if we're registered
     var whoamiLooper = function() {
       desksms.whoami(function(err, data) {
         var loginButton = $('#desksms-login');
@@ -452,6 +453,15 @@ var page = new function() {
 
           loginButton.attr('href', desksms.getLogoutUrl());
           loginButton.text("Logout");
+
+          $('#content-status-login').hide();
+          if (!data.registration_id) {
+            $('#content-status-not-registered').show();
+            if (extension == 'firefox')
+              setTimeout(whoamiLooper, 5000);
+            return;
+          }
+          $('#content-status').show();
           
           page.refreshInbox();
           
