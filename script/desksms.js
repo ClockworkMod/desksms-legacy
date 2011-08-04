@@ -110,6 +110,7 @@ var desksms = new function() {
       return;
     }
 
+    $.support.cors = true;
     $.get('http://desksmspush.deployfu.com:9980/wait/' + encodeURIComponent(desksms.registrationId) + "?nonce=" + new Date().getTime(), function(data) {
       desksms.push(cb);
       cb(null, data);
