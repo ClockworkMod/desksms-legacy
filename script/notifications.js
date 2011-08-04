@@ -14,13 +14,9 @@ var notifications = new function() {
       // firefox only shows badges
       var curCount = 0;
       var firefoxExtensionData = $('#firefox-extension-data');
-      try {
-        curCount = parseInt(firefoxExtensionData.text());
-        if (isNaN(curCount))
-          curCount = 0;
-      }
-      catch (e) {
-      }
+      curCount = parseInt(firefoxExtensionData.text());
+      if (isNaN(curCount))
+        curCount = 0;
       curCount++;
       
       firefoxExtensionData.text(curCount);

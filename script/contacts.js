@@ -16,11 +16,9 @@ var contacts = new function() {
         ret += c;
     });
     // trim off any 0's at the start by converting to an int and back
-    try {
-      return String(parseInt(ret, 10));
-    }
-    catch (e) {
-    }
+    var intVal = parseInt(ret, 10);
+    if (!isNaN(intVal))
+      ret = String(intVal);
     return ret;
   }
   
