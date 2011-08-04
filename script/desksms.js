@@ -5,6 +5,7 @@ function Conversation(number) {
   this.messages = {};
   this.latestMessageDate = 0;
   this.contact = contacts.findNumber(number);
+  this.read = false;
 }
 
 Conversation.prototype.addMessage = function(message) {
@@ -82,6 +83,7 @@ var desksms = new function() {
       // bucket these into conversations
       $.each(data.data, function(index, message) {
         var conversation = desksms.startConversation(message.number);
+        conversation.read = false;
         conversation.addMessage(message);
       });
     }

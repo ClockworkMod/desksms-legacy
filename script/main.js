@@ -279,6 +279,16 @@ var page = new function() {
     $(conversationElement).find('.contact-last-message-date').text(lastMessageDate);
     $(conversationElement).find('#conversation-id').text(conversation.id);
     
+    var conversationUnreadElement = $(conversationElement).find('.conversation-unread');
+    conversationElement.unbind('click');
+    conversationElement.click(function() {
+      conversationUnreadElement.fadeOut(500);
+    });
+    if (conversation.read)
+      conversationUnreadElement.hide();
+    else
+      conversationUnreadElement.show();
+
     var contact = conversation.contact;
     var displayName = conversation.number;
     var contactImage = $(conversationElement).find('.contact-image').attr('id', 'contact-image-' + conversation.id);
@@ -348,7 +358,10 @@ var page = new function() {
       });
 
       $.each(conversations, function(index, conversation) {
-        page.addConversationToTop(desksms.conversations[conversation]);
+        var convo = desksms.conversations[conversation];
+        if (startRefresh == 0)
+          convo.read = true;
+        page.addConversationToTop(convo);
       });
 
       var messages = data.data;

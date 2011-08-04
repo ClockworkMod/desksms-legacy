@@ -195,3 +195,16 @@ input.rounded {
     padding: 6px;
     font-weight: bold;
 }
+
+.conversation-unread {
+    display: table-cell;
+    width: 6px;
+    background-color: #82D1FF;
+
+    border-radius: 25px; /* Standard */
+   -o-border-radius: 25px; /* Opera 10.x */
+   -moz-border-radius: 25px; /* Mozilla/Firefox */
+   -icab-border-radius: 25px; /* iCab */
+   -khtml-border-radius: 25px; /* KHTML/Konqueror */
+   -webkit-border-radius: 25px; /* Webkit/Safari/Chrome/etcetera */
+}
