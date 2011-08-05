@@ -83,7 +83,8 @@ var desksms = new function() {
       // bucket these into conversations
       $.each(data.data, function(index, message) {
         var conversation = desksms.startConversation(message.number);
-        conversation.read = false;
+        if (message.type == 'incoming')
+          conversation.read = false;
         conversation.addMessage(message);
       });
     }
