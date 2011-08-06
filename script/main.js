@@ -407,6 +407,19 @@ var page = new function() {
   $(document).ready(function() {
     (function() {
       var input = $('#contact-search');
+      input.keypress(function(event) {
+        if (event.which != 13)
+          return;
+          var conversation = desksms.startConversation(input.val());
+          var conversationElement = $('#conversation-' + conversation.id);
+          if (!conversationElement || conversationElement.length == 0) {
+            page.addConversationToTop(conversation);
+            page.setClickHandlers();
+          }
+          conversationElement = $('#conversation-' + conversation.id);
+          var contactText = $(conversationElement).find('.contact-text');
+          contactText.trigger('click');
+      });
       input.autocomplete({
         minLength: 1,
         source: function(req, res) {
