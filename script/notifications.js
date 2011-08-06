@@ -9,6 +9,9 @@ var notifications = new function() {
         return;
       var notification = webkitNotifications.createNotification(icon, title, message);
       notification.show();
+      setTimeout(function() {
+        notification.cancel();
+      }, 10000);
     }
     else if (extension == 'firefox') {
       // firefox only shows badges
