@@ -55,7 +55,7 @@ var contacts = new function() {
         return;
       }
       // only match 7 digit numbers with fuzzy matches
-      if (entry.numbersOnly == null || entry.numbersOnly.length < 7 || numbersOnly < 7)
+      if (entry.numbersOnly == null || entry.numbersOnly.length < 7 || numbersOnly.length < 7)
         return;
       if (entry.numbersOnly.indexOf(numbersOnly) != -1 || numbersOnly.indexOf(entry.numbersOnly) != -1)
         ret = entry;
