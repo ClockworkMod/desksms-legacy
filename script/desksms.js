@@ -29,21 +29,21 @@ var desksms = new function() {
   this.WHOAMI_URL = this.API_URL + "/user/whoami";
   this.PROXY_URL = this.API_URL + "/proxy?proxied=%s";
   this.BADGE_URL = this.USER_URL + "/badge";
-  
+
   this.conversations = {};
-  
+
   this.getCrossOriginImage = function(image) {
     return sprintf(this.PROXY_URL, encodeURIComponent(image))
   }
-  
+
   this.getLoginUrl = function() {
     return sprintf(this.LOGIN_URL, encodeURIComponent(window.location.href));
   }
-  
+
   this.getLogoutUrl = function() {
     return sprintf(this.LOGOUT_URL, encodeURIComponent(window.location.href));
   }
-  
+
   this.registrationId = null;
   this.email = null;
   this.whoami = function(cb) {
@@ -55,7 +55,7 @@ var desksms = new function() {
       cb(err, data);
     });
   }
-  
+
   this.startConversation = function(number) {
     var convo = this.findConversation(number);
     if (convo)

@@ -3,6 +3,14 @@ var notifications = new function() {
   var extension = null;
 
   this.showNotification = function(icon, title, message) {
+    try {
+      // play the sound notification
+      $('#notification-sound')[0].play();
+    }
+    catch (e) {
+      console.log(e);
+    }
+
     if (window.webkitNotifications && !extension) {
       console.log(webkitNotifications.checkPermission());
       if (webkitNotifications.checkPermission() != 0)
