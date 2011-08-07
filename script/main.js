@@ -326,6 +326,10 @@ var page = new function() {
   this.lastRefresh = 0;
   
   this.refreshInbox = function() {
+    if (page.refreshInProgress)
+      return;
+    page.refreshInProgress = true;
+    
     var lastRefresh = this.lastRefresh;
     var startRefresh = this.lastRefresh;
     if (lastRefresh == 0)
@@ -333,6 +337,7 @@ var page = new function() {
     
     console.log(lastRefresh);
     desksms.getSms({ after_date: lastRefresh }, function(err, data) {
+      page.refreshInProgress = false;
       if (err) {
         console.log(err);
         return;
@@ -473,7 +478,7 @@ var page = new function() {
           if (err || !data.email) {
             loginButton.attr('href', desksms.getLoginUrl());
             if (extension == 'firefox')
-              setTimeout(whoamiLooper, 5000);
+              setTimeout(whoamiLooper, 30000);
             return;
           }
 
@@ -484,7 +489,7 @@ var page = new function() {
           if (!data.registration_id) {
             $('#content-status-not-registered').show();
             if (extension == 'firefox')
-              setTimeout(whoamiLooper, 5000);
+              setTimeout(whoamiLooper, 30000);
             return;
           }
           $('#content-status').show();
@@ -498,6 +503,7 @@ var page = new function() {
       });
     };
     whoamiLooper();
+    page.refreshInbox();
     
     if (extension) {
       $('.link').attr('target', '_blank');
