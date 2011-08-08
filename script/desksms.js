@@ -16,7 +16,7 @@ Conversation.prototype.addMessage = function(message) {
 }
 
 var desksms = new function() {
-  this.BASE_URL = "https://2.desksms.appspot.com";
+  this.BASE_URL = "https://desksms.appspot.com";
   this.API_URL = this.BASE_URL + "/api/v1";
   this.USER_URL = this.API_URL + "/user/default";
   this.SETTINGS_URL = this.USER_URL + "/settings";
