@@ -324,9 +324,12 @@ var page = new function() {
   }
   
   this.lastRefresh = 0;
-  
-  this.refreshInbox = function() {
+  this.refreshInProgress = false;
+  this.hasSuccessfullySynced = false;
+  this.refreshInbox = function(initialSync) {
     if (page.refreshInProgress)
+      return;
+    if (page.hasSuccessfullySynced && initialSync)
       return;
     page.refreshInProgress = true;
     
@@ -342,6 +345,7 @@ var page = new function() {
         console.log(err);
         return;
       }
+      hasSuccessfullySynced = true;
       if (data.data == null) {
         console.log('no data returned from sms call');
         return;
@@ -494,7 +498,7 @@ var page = new function() {
           }
           $('#content-status').show();
           
-          page.refreshInbox();
+          page.refreshInbox(true);
           
           desksms.push(function(err, data) {
             page.refreshInbox();
@@ -503,7 +507,7 @@ var page = new function() {
       });
     };
     whoamiLooper();
-    page.refreshInbox();
+    page.refreshInbox(true);
     
     if (extension) {
       $('.link').attr('target', '_blank');

@@ -46,11 +46,13 @@ var desksms = new function() {
 
   this.registrationId = null;
   this.email = null;
+  this.buyer_id = null;
   this.whoami = function(cb) {
     jsonp(this.WHOAMI_URL, function(err, data) {
       if (data) {
         desksms.email = data.email;
         desksms.registrationId = data.registration_id;
+        desksms.buyer_id = data.buyer_id;
       }
       cb(err, data);
     });
