@@ -638,6 +638,7 @@ var page = new function() {
       $('#notification-sound')[0].play();
       $.cookie('play-sound', true);
     }
+    this.updateSound();
   }
 
   this.updateSound = function() {
