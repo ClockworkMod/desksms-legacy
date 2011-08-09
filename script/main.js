@@ -414,6 +414,8 @@ var page = new function() {
   }
 
   $(document).ready(function() {
+    page.updateSound();
+
     (function() {
       var input = $('#contact-search');
       input.keypress(function(event) {
@@ -626,5 +628,42 @@ var page = new function() {
       localStorage[key] = JSON.stringify(cachedContact);
       console.log('cached contact photo ' + conversation.number);
     });
+  }
+
+  this.toggleSound = function() {
+    if ($.cookie('play-sound')) {
+      $.cookie('play-sound', null);
+    }
+    else {
+      $('#notification-sound')[0].play();
+      $.cookie('play-sound', true);
+    }
+  }
+
+  this.updateSound = function() {
+    $('#sound-icon').attr('src', $.cookie('play-sound') ? 'images/sound_on.png' : 'images/sound_off.png');
+  }
+
+  this.purchase = function() {
+    var customPayload = {
+      email: desksms.email
+    }
+
+    jsonp(sprintf('https://clockworkbilling.appspot.com/api/v1/request/google/koushd@gmail.com?product_id=desksms.subscription0&custom_payload=%s&buyer_id=%s', encodeURIComponent(JSON.stringify(customPayload)), desksms.buyer_id),
+      function(err, data) {
+        if (err)
+          return;
+        if (data.purchased) {
+          alert("You've already purchased this!");
+          return;
+        }
+        goog.payments.inapp.buy({
+            'jwt': data.jwt,
+            'success': function() {
+              alert('thanks!!');
+            },
+            'failure': function() {}
+            });
+      });
   }
 }
