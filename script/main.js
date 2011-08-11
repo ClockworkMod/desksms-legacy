@@ -103,6 +103,7 @@ var page = new function() {
         var conversationId = $(conversationElement).find('#conversation-id').text();
         var conversation = desksms.conversations[conversationId];
         var number = conversation.number;
+        desksms.read();
         desksms.sendSms(number, contents, function(err, data) {
           if (err) {
             console.log(err);
@@ -323,6 +324,7 @@ var page = new function() {
     return conversationElement;
   }
   
+  this.hasMarkedRead = false;
   this.lastRefresh = 0;
   this.refreshInProgress = false;
   this.hasSuccessfullySynced = false;
@@ -353,7 +355,10 @@ var page = new function() {
       if (data.data.length == 0)
         return;
 
-      desksms.read();
+      if (!page.hasMarkedRead) {
+        page.hasMarkedRead = true;
+        desksms.read();
+      }
 
       var conversations = {};
       $.each(data.data, function(index, message) {
