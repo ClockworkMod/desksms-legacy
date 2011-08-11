@@ -147,7 +147,7 @@ var page = new function() {
 
           contentStatus.fadeOut(10000, function() {
             contentStatus.hide();
-            contentStatus.text('DeskSMS');
+            contentStatus.text('');
           });
         });
       });
@@ -353,6 +353,8 @@ var page = new function() {
       if (data.data.length == 0)
         return;
 
+      desksms.read();
+
       var conversations = {};
       $.each(data.data, function(index, message) {
         conversations[message.conversation.id] = message.conversation;
@@ -382,7 +384,7 @@ var page = new function() {
         }
         else {
           contentStatus.hide();
-          contentStatus.text('DeskSMS')
+          contentStatus.text('')
         }
         var convoCounter = {};
         messages.reverse();
@@ -491,7 +493,8 @@ var page = new function() {
           loginButton.attr('href', desksms.getLogoutUrl());
           loginButton.text("Logout");
 
-          $('#content-status-login').hide();
+          $('.login-hide').hide();
+          $('.login-show').show();
           if (!data.registration_id) {
             $('#content-status-not-registered').show();
             if (extension == 'firefox')
@@ -645,12 +648,22 @@ var page = new function() {
     $('#sound-icon').attr('src', $.cookie('play-sound') ? 'images/sound_on.png' : 'images/sound_off.png');
   }
 
-  this.purchase = function() {
-    var customPayload = {
-      email: desksms.email
-    }
+  this.sandbox = true;
+  if (this.sandbox) {
+    google.load('payments', '1.0', {
+      'packages': ['sandbox_config']
+    });
+  }
+  else {
+    google.load('payments', '1.0', {
+      'packages': ['production_config']
+    });
+  }
 
-    jsonp(sprintf('https://clockworkbilling.appspot.com/api/v1/request/google/koushd@gmail.com?product_id=desksms.subscription0&custom_payload=%s&buyer_id=%s', encodeURIComponent(JSON.stringify(customPayload)), desksms.buyer_id),
+  this.purchase = function() {
+    var customPayload = desksms.email;
+
+    jsonp(sprintf('https://clockworkbilling.appspot.com/api/v1/request/google/koushd@gmail.com/desksms.subscription0?custom_payload=%s&buyer_id=%s&sandbox=%s', encodeURIComponent(JSON.stringify(customPayload)), desksms.buyer_id, page.sandbox),
       function(err, data) {
         if (err)
           return;

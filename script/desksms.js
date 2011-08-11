@@ -29,6 +29,7 @@ var desksms = new function() {
   this.WHOAMI_URL = this.USER_URL + "/whoami";
   this.PROXY_URL = this.API_URL + "/proxy?proxied=%s";
   this.BADGE_URL = this.USER_URL + "/badge";
+  this.READ_URL = this.USER_URL + "/read";
 
   this.conversations = {};
 
@@ -66,7 +67,7 @@ var desksms = new function() {
     this.conversations[convo.id] = convo;
     return convo;
   }
-  
+
   this.findConversation = function(number) {
     return contacts.findNumber(number, desksms.conversations);
   }
@@ -91,7 +92,11 @@ var desksms = new function() {
       });
     }
   }
-  
+
+  this.read = function(cb) {
+    jsonp(this.READ_URL, cb);
+  }
+
   this.getSms = function(options, cb) {
     jsonp(this.SMS_URL, function(err, data) {
       desksms.parseSms(data);

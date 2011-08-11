@@ -2,6 +2,7 @@
 <html>
 <title>DeskSMS</title>
 <head>
+  <script type="text/javascript" src="http://www.google.com/jsapi"></script>
   <script type="text/javascript" src="script/json2.js"></script>
   <script type="text/javascript" src="script/console.js"></script>
   <script type="text/javascript" src="http://crypto-js.googlecode.com/files/2.3.0-crypto-md5.js"></script>
@@ -42,18 +43,12 @@
     })();
 
   </script>
-  <script type="text/javascript" src="http://www.google.com/jsapi"></script>
-  <script type="text/javascript">
-    google.load('payments', '1.0', {
-      'packages': ['sandbox_config']
-    });
-  </script>
   </head>
 <body>
   <audio id='notification-sound' class='hidden'>
     <source src='notifications/Tinkerbell.ogg'></source>
   </audio>
-  <a href="http://github.com/ClockworkMod/desksms" class='github-fork'><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/30f550e0d38ceb6ef5b81500c64d970b7fb0f028/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub"></img></a>
+  <!-- <a href="http://github.com/ClockworkMod/desksms" class='github-fork'><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/30f550e0d38ceb6ef5b81500c64d970b7fb0f028/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub"></img></a> -->
   <div class="page-header">
     <span class="desksms-header"><a class='link' href='https://market.android.com/details?id=com.koushikdutta.desktopsms' id='market-link'>DeskSMS</a></span>
     <span class="email-header"><a class='link' href="javascript:void(0)" id="desksms-login">Login</a></span>
@@ -64,7 +59,7 @@
     <iframe src="http://www.facebook.com/plugins/like.php?app_id=253415994687147&amp;href=https%3A%2F%2Fmarket.android.com%2Fdetails%3Fid%3Dcom.koushikdutta.desktopsms&amp;send=false&amp;layout=button_count&amp;width=200&amp;show_faces=true&amp;action=like&amp;colorscheme=dark&amp;font&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:200px; height:21px;" allowTransparency="true"></iframe>
   </div>
   <div class="grey-header">
-    <div class="content-status" id="content-status-login" align="center"><span>New to DeskSMS? Install the </span><a class='link' href='https://market.android.com/details?id=com.koushikdutta.desktopsms'>DeskSMS Android</a><span> application to get started! If you have already installed the application, just log in above to send and receive your texts!</span></div>
+    <div class="content-status login-hide" align="center"><span>New to DeskSMS? Install the </span><a class='link' href='https://market.android.com/details?id=com.koushikdutta.desktopsms'>DeskSMS Android</a><span> application to get started! If you have already installed the application, just log in above to send and receive your texts!</span></div>
     <div class="content-status hidden" id="content-status-not-registered" align="center"><span>Thanks for logging in! Now, you need to install the </span><a class='link' href='https://market.android.com/details?id=com.koushikdutta.desktopsms'>DeskSMS Android</a><span> application on your phone send and receive texts!</span></div>
     <div class="content-status hidden" id="content-status" align="center"></div>
     <!-- <div class='like-buttons' align='center'>
@@ -84,7 +79,7 @@
         <a href="http://twitter.com/share" class="twitter-share-button link" data-url="https://market.android.com/details?id=com.koushikdutta.desktopsms" data-text="Just discovered DeskSMS! Let's you send texts from your computer using your own phone number!" data-count="horizontal" data-via="clockworkmod" data-related="koush">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
       </div>
     </div> -->
-    <div class="contact-search" align="center"><input class='rounded' id='contact-search' placeholder='Find Contact'></input></div>
+    <div class="contact-search login-show hidden" align="center"><input class='rounded' id='contact-search' placeholder='Find Contact'></input></div>
     <div style="clear: both;"></div>
   </div>
   <div class='hidden'>
