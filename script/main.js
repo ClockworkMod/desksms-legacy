@@ -589,6 +589,9 @@ var page = new function() {
       return ret;
     try {
       ret = JSON.parse(localStorage[key]);
+      // verify the cache still matches (in case the matching rules change, and the cache is old)
+      if (!contacts.numbersMatch(ret.number, conversation.number))
+        return null;
       ret.fromCache = true;
       this.cachedContacts[key] = ret;
       console.log('using cached contact');

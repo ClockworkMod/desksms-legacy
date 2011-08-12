@@ -44,13 +44,33 @@ var contacts = new function() {
     return contact.name;
   }
   
+  this.numbersMatch = function(n1, n2) {
+    if (n1 == n2)
+      return true;
+
+    if (!n1 || !n2)
+      return false;
+
+    var n1o = this.numbersOnly(n1);
+    var n2o = this.numbersOnly(n1);
+
+    // only match 7 digit numbers with fuzzy matches
+    if (n1o.length < 7 || n2o.length < 7)
+      return false;
+
+    if (n1o.indexOf(n2o) != -1 || n2o.indexOf(n1o) != -1)
+      return true;
+
+    return false;
+  }
+
   this.findNumber = function(number, list) {
     if (list == null)
       list = this.list;
     var numbersOnly = this.numbersOnly(number);
     var ret = null;
     $.each(list, function(index, entry) {
-      if (number == entry.number || entry.numbersOnly == numbersOnly) {
+      if (number == entry.number) {
         ret = entry;
         return;
       }
