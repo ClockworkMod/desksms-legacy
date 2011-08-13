@@ -506,9 +506,11 @@ var page = new function() {
               setTimeout(whoamiLooper, 30000);
             return;
           }
-          $('#content-status').show();
+          //$('#content-status').show();
           
           page.refreshInbox(true);
+          
+          page.updateExpiration(data.subscription_expiration);
           
           desksms.push(function(err, data) {
             page.refreshInbox();
@@ -550,6 +552,15 @@ var page = new function() {
     $("#contact-name-" + conversation.id).text(contact.name).removeClass("hidden");
     $(".message-from-" + conversation.id).text(contact.name).removeClass("hidden");
   });
+  
+  this.updateExpiration = function(subscription_expiration) {
+    daysLeft = subscription_expiration - new Date().getTime();
+    daysLeft = daysLeft / 24 / 60 / 60 / 1000;
+    if (daysLeft < 10 || page.sandbox) {
+      $('#buy-desksms').text(sprintf("Only %d days left!", Math.round(daysLeft)))
+      $('#buy-desksms-container').show();
+    }
+  }
   
   this.loadContactPhoto = function(photoElement, conversation, contact) {
     // if we don't have local cache, or this contact is from cache
@@ -656,7 +667,7 @@ var page = new function() {
     $('#sound-icon').attr('src', $.cookie('play-sound') ? 'images/sound_on.png' : 'images/sound_off.png');
   }
 
-  this.sandbox = true;
+  this.sandbox = false;
   if (this.sandbox) {
     google.load('payments', '1.0', {
       'packages': ['sandbox_config']
@@ -667,8 +678,13 @@ var page = new function() {
       'packages': ['production_config']
     });
   }
-
-  this.purchase = function() {
+  
+  this.purchaseOnMarket = function() {
+    $('#buy-android').fadeIn(500);
+  }
+  
+  this.purchaseOnGoogleCheckout = function() {
+    $('#buy-dialog').dialog('close');
     var customPayload = desksms.email;
 
     jsonp(sprintf('https://clockworkbilling.appspot.com/api/v1/request/google/koushd@gmail.com/desksms.subscription0?custom_payload=%s&buyer_id=%s&sandbox=%s', encodeURIComponent(JSON.stringify(customPayload)), desksms.buyer_id, page.sandbox),
@@ -682,10 +698,28 @@ var page = new function() {
         goog.payments.inapp.buy({
             'jwt': data.jwt,
             'success': function() {
-              alert('thanks!!');
+              $('#buy-desksms-container').hide();
+              // this is hidden, but we call this to force a server refresh of the subscription time.
+              page.updateStatus();
             },
             'failure': function() {}
             });
       });
+  }
+  
+  this.updateStatus = function() {
+    desksms.status(function(err, data) {
+      if (err)
+        return;
+      page.updateExpiration(data.subscription_expiration);
+    });
+  }
+
+  this.purchase = function() {
+    $('#buy-checkout-complete').hide();
+    $('#buy-android').hide();
+    $('#buy-dialog').dialog({ draggable: true, closeOnEscape: true, title: "Checkout Options:"});
+    $(':focus').blur();
+    page.updateStatus();
   }
 }

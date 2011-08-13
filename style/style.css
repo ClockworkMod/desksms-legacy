@@ -208,3 +208,15 @@ input.rounded {
    -khtml-border-radius: 25px; /* KHTML/Konqueror */
    -webkit-border-radius: 25px; /* Webkit/Safari/Chrome/etcetera */
 }
+
+.buy-dialog {
+    text-align: center
+}
+
+.buy-spacer {
+    padding: 10px;
+}
+
+#buy-desksms {
+    color: red;
+}

@@ -30,6 +30,8 @@ var desksms = new function() {
   this.PROXY_URL = this.API_URL + "/proxy?proxied=%s";
   this.BADGE_URL = this.USER_URL + "/badge";
   this.READ_URL = this.USER_URL + "/read";
+  this.STATUS_URL = this.USER_URL + "/status";
+  this.DELETE_CONVERSATION_URL = this.USER_URL + "/delete/conversation";
 
   this.conversations = {};
 
@@ -97,6 +99,10 @@ var desksms = new function() {
     jsonp(this.READ_URL, cb);
   }
 
+  this.status = function(cb) {
+    jsonp(this.STATUS_URL, cb);
+  }
+
   this.getSms = function(options, cb) {
     jsonp(this.SMS_URL, function(err, data) {
       desksms.parseSms(data);
@@ -159,12 +165,14 @@ var desksms = new function() {
       return;
     var numbers = {};
     $.each(conversation.messages, function(index, message) {
-      numbers[message.number] = true;
+      number = numbers[message.number];
+      if (!number)
+        number = numbers[message.number] = []
+      number.push(message.date);
     });
     
-    numbers = keys(numbers);
-    $.each(numbers, function(index, messageNumber) {
-      jsonp(desksms.SMS_URL, null, { operation: "DELETE", number: messageNumber });
+    $.each(numbers, function(number, dates) {
+      jsonp(desksms.DELETE_CONVERSATION_URL, null, { number: number, dates: JSON.stringify(dates) });
     });
   }
 
