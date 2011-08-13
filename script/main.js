@@ -220,7 +220,13 @@ var page = new function() {
       $(messageElement).find('.message-pending').removeClass('hidden');
     else
       $(messageElement).find('.message-pending').addClass('hidden');
-    $(messageElement).find(".message-content").text(message.message);
+    if (message.image) {
+      var img = $('<img></img>').attr('src', sprintf("%s/%s/%s", desksms.IMAGE_URL, encodeURIComponent(message.number), encodeURIComponent(message.date)));
+      $(messageElement).find(".message-content").append(img);
+    }
+    else {
+      $(messageElement).find(".message-content").text(message.message);
+    }
     $(messageElement).find(".message-date").text(dateFormat(new Date(message.date), "shortTime"));
     
     if (needsInsert) {

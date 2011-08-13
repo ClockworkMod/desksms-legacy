@@ -31,6 +31,7 @@ var desksms = new function() {
   this.BADGE_URL = this.USER_URL + "/badge";
   this.READ_URL = this.USER_URL + "/read";
   this.STATUS_URL = this.USER_URL + "/status";
+  this.IMAGE_URL = this.USER_URL + "/image";
   this.DELETE_CONVERSATION_URL = this.USER_URL + "/delete/conversation";
 
   this.conversations = {};
