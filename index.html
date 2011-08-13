@@ -57,6 +57,7 @@
     <span class="connect-google-header"><a class='link' href="javascript:void(0);" id="connect-google">Sync Contacts</a></span>
     <span class="enable-chrome-notifications hidden no-extension"><a href="javascript:notifications.requestPermissions()">Enable Chrome Notifications</a></span>
     <span><a href='javascript:page.toggleSound()'><img id='sound-icon' src='images/sound_on.png'></img></a></span>
+    <span><a href='javascript:page.options()'><img id='options-icon' src='images/options.png'></img></a></span>
     <span id='buy-desksms-container' class='hidden'><a class='buy-desksms' id='buy-desksms' href="javascript:page.purchase()"></a></span>
     <!-- <iframe src="http://www.facebook.com/plugins/like.php?app_id=253415994687147&amp;href=https%3A%2F%2Fmarket.android.com%2Fdetails%3Fid%3Dcom.koushikdutta.desktopsms&amp;send=false&amp;layout=button_count&amp;width=200&amp;show_faces=true&amp;action=like&amp;colorscheme=dark&amp;font&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:200px; height:21px;" allowTransparency="true"></iframe> -->
   </div>
@@ -75,15 +76,20 @@
   <div class="content-container" id="content-container">
     <div id="buy-dialog" class="buy-dialog hidden">
       <div class='buy-desksms-container'>Your purchase helps keep the DeskSMS servers running!</div>
-      <div class='buy-spacer'></div>
+      <div class='dialog-spacer'></div>
       <div class='buy-desksms' id='account-status'></div>
-      <div class='buy-spacer'></div>
+      <div class='dialog-spacer'></div>
       <div><a href='javascript:page.purchaseOnGoogleCheckout()'><img src='images/google_checkout.png'></img></a></div>
-      <div class='buy-spacer'>or</div>
+      <div class='dialog-spacer'>or</div>
       <div><a href='javascript:page.purchaseOnMarket()'><img src='images/android_market.png'></img></a></div>
       <div id='buy-android'>You can buy a DeskSMS License from within the DeskSMS Android application, but you can check out now using Google Checkout above!</div>
     </div>
     
+    <div id='options-dialog' class='options-dialog hidden'>
+      <div><a href='javascript:page.defaultTheme()'>Default Theme</a></div>
+      <div class='dialog-spacer'></div>
+      <div><a href='javascript:page.metroDarkTheme()'>Metro Dark Theme</a></div>
+    </div>
     
     <div id="conversation-template" class="conversation-template hidden">
       <div class="contact-header" align="center">

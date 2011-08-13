@@ -723,4 +723,22 @@ var page = new function() {
     $(':focus').blur();
     page.updateStatus();
   }
+  
+  this.defaultTheme = function() {
+    $.cookie('theme', null);
+    window.location.reload();
+  }
+  
+  this.metroDarkTheme = function() {
+    $.cookie('theme', 'metro-dark');
+    $.getScript('style/theme/metro_dark.js');
+  }
+  
+  this.options = function() {
+    $('#options-dialog').dialog({ draggable: true, closeOnEscape: true, title: "Options"});
+  }
+  
+  if ($.cookie('theme') == 'metro-dark') {
+    $.getScript('style/theme/metro_dark.js');
+  }
 }

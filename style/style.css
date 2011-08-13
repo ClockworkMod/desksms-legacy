@@ -213,7 +213,11 @@ input.rounded {
     text-align: center
 }
 
-.buy-spacer {
+.options-dialog {
+    text-align: center
+}
+
+.dialog-spacer {
     padding: 10px;
 }
 
