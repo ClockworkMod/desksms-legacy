@@ -557,7 +557,9 @@ var page = new function() {
     daysLeft = subscription_expiration - new Date().getTime();
     daysLeft = daysLeft / 24 / 60 / 60 / 1000;
     if (daysLeft < 10 || page.sandbox) {
-      $('#buy-desksms').text(sprintf("Only %d days left!", Math.round(daysLeft)))
+      var text = sprintf("Only %d days left!", Math.round(daysLeft));
+      $('#account-status').text(text);
+      $('#buy-desksms').text(text);
       $('#buy-desksms-container').show();
     }
   }
