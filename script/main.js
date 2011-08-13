@@ -71,7 +71,7 @@ var page = new function() {
       characterCountElement.text("160 characters remaining (1)");
 
       var footer = $(event.target).parents('.message-panel-footer');
-      var hidden = footer.find('.contact-text-container');
+      var hidden = footer.find('.contact-text-container-hidden');
 
       hidden.show();
       input = hidden.find('.contact-text-content');
