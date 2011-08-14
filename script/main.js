@@ -158,7 +158,6 @@ var page = new function() {
     contactDelete.unbind('click');
     contactDelete.click(function(event) {
       var conversationElement = $(event.target).parents('.conversation-template');
-      var number = $(conversationElement).find('.contact-number').text();
       var conversationId = $(conversationElement).find('#conversation-id').text();
       var conversation = desksms.conversations[conversationId];
       var number = conversation.number;
@@ -318,14 +317,12 @@ var page = new function() {
         page.loadContactPhoto(contactImage, conversation, contact);
       }
       displayName = contact.name;
-      //contactNameElement.text(contact.name).removeClass("hidden");
+      $(conversationElement).find('.contact-number').show();
     }
-    /*
     else {
-      contactNameElement.addClass("hidden");
+      $(conversationElement).find('.contact-number').hide();
     }
-    */
-    contactNameElement.text(displayName).removeClass("hidden");
+    contactNameElement.text(displayName);
 
     return conversationElement;
   }
@@ -555,8 +552,8 @@ var page = new function() {
     
     if (contact.photo)
       page.loadContactPhoto(photoElement, conversation, contact);
-    $("#contact-name-" + conversation.id).text(contact.name).removeClass("hidden");
-    $(".message-from-" + conversation.id).text(contact.name).removeClass("hidden");
+    $("#contact-name-" + conversation.id).text(contact.name);
+    $(".message-from-" + conversation.id).text(contact.name);
   });
   
   this.updateExpiration = function(subscription_expiration) {

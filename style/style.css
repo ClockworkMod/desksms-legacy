@@ -227,3 +227,7 @@ input.rounded {
 #buy-desksms {
     color: red;
 }
+
+.contact-number {
+    font-size: 10px;
+}
