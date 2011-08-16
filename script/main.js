@@ -562,7 +562,7 @@ var page = new function() {
   this.updateExpiration = function(subscription_expiration) {
     daysLeft = subscription_expiration - new Date().getTime();
     daysLeft = daysLeft / 24 / 60 / 60 / 1000;
-    if (daysLeft < 10 || page.sandbox) {
+    if (daysLeft < 14 || page.sandbox) {
       $('#account-status').text(sprintf("%d days remaining", Math.round(daysLeft)));
       $('#buy-desksms').text(sprintf("%d days left. Extend now!", Math.round(daysLeft)));
       $('#buy-desksms-container').show();
