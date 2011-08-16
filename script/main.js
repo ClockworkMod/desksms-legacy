@@ -519,9 +519,11 @@ var page = new function() {
           page.updateExpiration(data.subscription_expiration);
 
           var startPush = function() {
-            $('#push-iframe')[0].contentWindow.startPush(desksms.buyerId, function(err, data) {
-              page.refreshInbox();
-            });
+            if ($('#push-iframe')[0].contentWindow.startPush) {
+              $('#push-iframe')[0].contentWindow.startPush(desksms.buyerId, function(err, data) {
+                page.refreshInbox();
+              });
+            }
           }
           $('#push-iframe')[0].contentWindow.onPushReady = function() {
             startPush();
