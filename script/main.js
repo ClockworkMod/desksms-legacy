@@ -562,9 +562,11 @@ var page = new function() {
   this.updateExpiration = function(subscription_expiration) {
     daysLeft = subscription_expiration - new Date().getTime();
     daysLeft = daysLeft / 24 / 60 / 60 / 1000;
+    daysLeft = Math.round(daysLeft);
+    $('#account-status').text(sprintf("%d days remaining", daysLeft));
+    $('#account-status').show();
     if (daysLeft < 14 || page.sandbox) {
-      $('#account-status').text(sprintf("%d days remaining", Math.round(daysLeft)));
-      $('#buy-desksms').text(sprintf("%d days left. Extend now!", Math.round(daysLeft)));
+      $('#buy-desksms').text(sprintf("%d days left. Extend now!", daysLeft));
       $('#buy-desksms-container').show();
     }
   }
@@ -692,7 +694,7 @@ var page = new function() {
   
   this.purchaseOnGoogleCheckout = function() {
     $('#buy-dialog').dialog('close');
-    var customPayload = desksms.email;
+    var customPayload = { account: desksms.email };
 
     jsonp(sprintf('https://clockworkbilling.appspot.com/api/v1/request/google/koushd@gmail.com/desksms.subscription0?custom_payload=%s&buyer_id=%s&sandbox=%s', encodeURIComponent(JSON.stringify(customPayload)), desksms.buyer_id, page.sandbox),
       function(err, data) {
@@ -723,6 +725,7 @@ var page = new function() {
   }
 
   this.purchase = function() {
+    $('#account-status').hide()
     $('#buy-checkout-complete').hide();
     $('#buy-android').hide();
     $('#buy-dialog').dialog({ draggable: true, closeOnEscape: true, title: "Checkout Options:"});
