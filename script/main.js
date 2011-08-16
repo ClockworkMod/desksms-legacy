@@ -517,10 +517,16 @@ var page = new function() {
           page.refreshInbox(true);
           
           page.updateExpiration(data.subscription_expiration);
-          
-          desksms.push(function(err, data) {
-            page.refreshInbox();
-          });
+
+          var startPush = function() {
+            $('#push-iframe')[0].contentWindow.startPush(desksms.buyerId, function(err, data) {
+              page.refreshInbox();
+            });
+          }
+          $('#push-iframe')[0].contentWindow.onPushReady = function() {
+            startPush();
+          }
+          startPush();
         }
       });
     };

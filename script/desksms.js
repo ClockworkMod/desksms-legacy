@@ -50,13 +50,13 @@ var desksms = new function() {
 
   this.registrationId = null;
   this.email = null;
-  this.buyer_id = null;
+  this.buyerId = null;
   this.whoami = function(cb) {
     jsonp(this.WHOAMI_URL, function(err, data) {
       if (data) {
         desksms.email = data.email;
         desksms.registrationId = data.registration_id;
-        desksms.buyer_id = data.buyer_id;
+        desksms.buyerId = data.buyer_id;
       }
       cb(err, data);
     });
@@ -119,13 +119,13 @@ var desksms = new function() {
       }, 30000);
     }
 
-    if (!desksms.registrationId) {
-      cb('no registration');
+    if (!desksms.buyerId) {
+      cb({ error: 'no id', unregistered: true });
       scheduleNextPushConnection();
       return;
     }
 
-    $.get('http://desksmspush.deployfu.com:9980/wait/' + encodeURIComponent(desksms.buyer_id) + "?nonce=" + new Date().getTime(), function(data) {
+    $.get('http://desksmspush.deployfu.com:9980/wait/' + encodeURIComponent(desksms.buyerId) + "?nonce=" + new Date().getTime(), function(data) {
       desksms.push(cb);
       cb(null, data);
     })
