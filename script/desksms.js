@@ -32,6 +32,7 @@ var desksms = new function() {
   this.READ_URL = this.USER_URL + "/read";
   this.STATUS_URL = this.USER_URL + "/status";
   this.IMAGE_URL = this.USER_URL + "/image";
+  this.PONG_URL = this.USER_URL + "/pong";
   this.DELETE_CONVERSATION_URL = this.USER_URL + "/delete/conversation";
 
   this.conversations = {};
@@ -60,6 +61,10 @@ var desksms = new function() {
       }
       cb(err, data);
     });
+  }
+  
+  this.pong = function(cb) {
+    jsonp(this.PONG_URL, cb);
   }
 
   this.startConversation = function(number) {

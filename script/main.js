@@ -314,6 +314,10 @@ var page = new function() {
       }
     }
 
+    if (conversation.number == 'DeskSMS') {
+      contactImage.attr('src', 'images/desksms-small.png');
+    }
+    
     if (contact) {
       if (contact.photo) {
         //contactImage.attr('src', contact.photo);
@@ -381,6 +385,8 @@ var page = new function() {
 
       $.each(conversations, function(index, conversation) {
         var convo = desksms.conversations[conversation];
+        if (convo.number == 'DeskSMS')
+          page.pongReceived = true;
         if (startRefresh == 0)
           convo.read = true;
         page.addConversationToTop(convo);
@@ -757,5 +763,29 @@ var page = new function() {
   
   if ($.cookie('theme') == 'metro-dark') {
     $.getScript('style/theme/metro_dark.js');
+  }
+  
+  this.pongReceived = false;
+  this.pong = function() {
+    this.pongReceived = false;
+    desksms.pong();
+    var contentStatus = $('#content-status');
+    contentStatus.show();
+    contentStatus.text('Checking connection to phone...');
+    contentStatus.fadeOut(9000, function() {
+      contentStatus.hide();
+      contentStatus.text('');
+    });
+    $('#options-dialog').dialog('close');
+    setTimeout(function() {
+      if (page.pongReceived)
+        return;
+      contentStatus.show();
+      contentStatus.text('The push connection to the phone has failed!');
+      contentStatus.fadeOut(10000, function() {
+        contentStatus.hide();
+        contentStatus.text('');
+      });
+    }, 10000);
   }
 }
