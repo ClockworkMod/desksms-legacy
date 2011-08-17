@@ -104,6 +104,7 @@ var page = new function() {
         var conversation = desksms.conversations[conversationId];
         var number = conversation.number;
         desksms.read();
+        _gaq.push(['_trackEvent', 'Send', desksms.email]);
         desksms.sendSms(number, contents, function(err, data) {
           if (err) {
             console.log(err);
