@@ -62,7 +62,7 @@ var desksms = new function() {
       cb(err, data);
     });
   }
-  
+
   this.pong = function(cb) {
     jsonp(this.PONG_URL, cb);
   }

@@ -317,7 +317,7 @@ var page = new function() {
     if (conversation.number == 'DeskSMS') {
       contactImage.attr('src', 'images/desksms-small.png');
     }
-    
+
     if (contact) {
       if (contact.photo) {
         //contactImage.attr('src', contact.photo);
@@ -764,7 +764,7 @@ var page = new function() {
   if ($.cookie('theme') == 'metro-dark') {
     $.getScript('style/theme/metro_dark.js');
   }
-  
+
   this.pongReceived = false;
   this.pong = function() {
     this.pongReceived = false;
