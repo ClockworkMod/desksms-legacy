@@ -58,6 +58,7 @@ var desksms = new function() {
         desksms.email = data.email;
         desksms.registrationId = data.registration_id;
         desksms.buyerId = data.buyer_id;
+        console.log(desksms.buyerId);
       }
       cb(err, data);
     });
