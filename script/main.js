@@ -310,9 +310,6 @@ var page = new function() {
     else {
       // try load from cache
       conversation.contact = contact = page.getCachedContact(conversation);
-      if (!conversation.contact && !page.successfullyRetrievedContact) {
-        $('.connect-google-header').show();
-      }
     }
 
     if (conversation.number == 'DeskSMS') {
