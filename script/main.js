@@ -64,8 +64,10 @@ var page = new function() {
   this.setClickHandlers = function() {
     var contactText = $('.contact-text');
     contactText.unbind('click');
+    var inputText = $('.contact-text-content');
+    inputText.unbind('click');
     
-    contactText.click(function(event) {
+    var clickHandler = function(event) {
       var conversationElement = $(event.target).parents('.conversation-template');
       var characterCountElement = $(conversationElement).find('.contact-text-character-count');
       characterCountElement.text("160 characters remaining (1)");
@@ -75,15 +77,20 @@ var page = new function() {
 
       hidden.show();
       input = hidden.find('.contact-text-content');
-      input.focus();
-      input.val('');
+      setTimeout(function() {
+        input.focus();
+      }, 200)
+
+      //input.val('');
       input.unbind('blur');
       input.unbind('keypress');
       // there seems to be a race condition between the element
       // disappearing and another text box getting focus
       input.blur(function(event) {
         setTimeout(function() {
-          hidden.hide();
+          var inputString = input.val();
+          if (!inputString || inputString.length == 0)
+            hidden.hide();
         }, 200);
       });
       
@@ -119,10 +126,12 @@ var page = new function() {
           page.addMessageToConversation(pendingMessage);
         });
         
-        input.blur();
+        input.val('');
       });
-    });
+    };
     
+    contactText.click(clickHandler);
+    inputText.click(clickHandler);
     
     var contactCall = $('.contact-call');
     contactCall.unbind('click');
@@ -169,7 +178,7 @@ var page = new function() {
       });
     });
   }
-  
+
   this.getDisplayName = function(conversation) {
     var contact = conversation.contact;
     var displayName;

@@ -1,5 +1,4 @@
 var jsonp = function(url, cb, data) {
-  console.log(url);
   var jqXHR = $.get(url, data, function(data) {
     if (cb)
       cb(null, data);
@@ -8,7 +7,6 @@ var jsonp = function(url, cb, data) {
     if (cb)
       cb(err);
   }).complete(function(jqXHR) {
-    console.log('complete');
   });
   return jqXHR;
 }
