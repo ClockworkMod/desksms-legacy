@@ -69,17 +69,15 @@ var page = new function() {
     
     var clickHandler = function(event) {
       var conversationElement = $(event.target).parents('.conversation-template');
-      var characterCountElement = $(conversationElement).find('.contact-text-character-count');
+      var characterCountElement = conversationElement.find('.contact-text-character-count');
       characterCountElement.text("160 characters remaining (1)");
 
-      var footer = $(event.target).parents('.message-panel-footer');
-      var hidden = footer.find('.contact-text-container-hidden');
+      var footer = conversationElement.find('.message-panel-footer');
+      var hidden = conversationElement.find('.contact-text-container-hidden');
 
       hidden.show();
-      input = hidden.find('.contact-text-content');
-      setTimeout(function() {
-        input.focus();
-      }, 200)
+      var input = hidden.find('.contact-text-content');
+      input.focus();
 
       //input.val('');
       input.unbind('blur');
@@ -89,8 +87,9 @@ var page = new function() {
       input.blur(function(event) {
         setTimeout(function() {
           var inputString = input.val();
-          if (!inputString || inputString.length == 0)
+          if (!inputString || inputString.length == 0) {
             hidden.hide();
+          }
         }, 200);
       });
       
@@ -107,7 +106,7 @@ var page = new function() {
         var contents = input.val();
         if (contents == "")
           return;
-        var conversationId = $(conversationElement).find('#conversation-id').text();
+        var conversationId = conversationElement.find('#conversation-id').text();
         var conversation = desksms.conversations[conversationId];
         var number = conversation.number;
         _gaq.push(['_trackEvent', 'Send', desksms.email]);
@@ -181,7 +180,7 @@ var page = new function() {
 
   this.getDisplayName = function(conversation) {
     var contact = conversation.contact;
-    var displayName;
+      var displayName;
     if (!contact) {
       contact = page.getCachedContact(conversation);
     }
