@@ -103,7 +103,6 @@ var page = new function() {
         var conversationId = $(conversationElement).find('#conversation-id').text();
         var conversation = desksms.conversations[conversationId];
         var number = conversation.number;
-        desksms.read();
         _gaq.push(['_trackEvent', 'Send', desksms.email]);
         desksms.sendSms(number, contents, function(err, data) {
           if (err) {
@@ -289,6 +288,10 @@ var page = new function() {
     var conversationUnreadElement = $(conversationElement).find('.conversation-unread');
     conversationElement.unbind('click');
     conversationElement.click(function() {
+      if (!conversation.read) {
+        desksms.read();
+        conversation.read = true;
+      }
       conversationUnreadElement.fadeOut(500);
     });
     if (conversation.read)
